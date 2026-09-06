@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TIMO Math Grade 1 - Fixed Text To Speech</title>
+    <title>TIMO Math Grade 1 - Fixed Navigation Flow</title>
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
@@ -19,14 +19,12 @@
 
         .timer-badge { background: #fee2e2; color: #991b1b; padding: 6px 12px; border-radius: 12px; font-weight: bold; font-size: 16px; border: 2px solid #f87171; display: none; align-items: center; gap: 4px; }
 
-        /* Account list */
         .account-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
         .account-card { background: #f0f9ff; border: 2px solid #3b82f6; border-radius: 16px; padding: 12px 16px; font-size: 18px; font-weight: bold; color: #1e40af; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
         .account-card:hover { background: #dbeafe; }
         .delete-acc-btn { background: #ef4444; color: white; border: none; border-radius: 8px; padding: 6px 12px; font-size: 13px; font-weight: bold; cursor: pointer; margin-left: 10px; }
         .delete-acc-btn:hover { background: #dc2626; }
 
-        /* 3 Rounds */
         .rounds-container { display: flex; flex-direction: column; gap: 12px; margin-top: 15px; }
         .round-card { border: 3px solid #cbd5e1; border-radius: 18px; padding: 16px; background: #f8fafc; cursor: pointer; transition: all 0.2s; position: relative; }
         .round-card.unlocked { border-color: #3b82f6; background: #eff6ff; }
@@ -630,13 +628,14 @@
         document.getElementById('parent-screen').style.display = 'none';
         document.getElementById('topic-select-screen').style.display = 'block';
         document.getElementById('back-btn').style.display = 'block';
-        document.getElementById('back-btn').innerText = parentMode ? '◀ Bảng Cho Bố' : '◀ Trang chủ';
+        document.getElementById('back-btn').innerText = parentMode ? '◀ Bảng Cho Bố' : '◀ Chọn Vòng';
     }
 
     function openVocab() {
         document.getElementById('menu-screen').style.display = 'none';
         document.getElementById('vocab-screen').style.display = 'block';
         document.getElementById('back-btn').style.display = 'block';
+        document.getElementById('back-btn').innerText = '◀ Trang chủ';
 
         const container = document.getElementById('vocab-list-container'); container.innerHTML = '';
         vocabList.forEach(v => {
@@ -663,6 +662,7 @@
         document.getElementById('menu-screen').style.display = 'none';
         document.getElementById('quiz-screen').style.display = 'block';
         document.getElementById('back-btn').style.display = 'block';
+        document.getElementById('back-btn').innerText = '◀ Trang chủ';
 
         initQuestion();
     }
@@ -684,25 +684,35 @@
     let startTime = 0, currentTopicKey = '';
     let examCorrectCount = 0;
 
+    // SỬA: ĐIỀU HƯỚNG PHÂN CẤP CHUẨN KHI BẤM NÚT QUAY LẠI
     function showMenu() {
         stopTimer();
-        isReviewWrongMode = false;
 
+        // 1. Khi đang trong Quiz/Bài thi -> Bấm quay lại sẽ về Màn hình chọn chủ đề
+        if (document.getElementById('quiz-screen').style.display === 'block') {
+            document.getElementById('quiz-screen').style.display = 'none';
+            document.getElementById('topic-select-screen').style.display = 'block';
+            document.getElementById('back-btn').innerText = parentMode ? '◀ Bảng Cho Bố' : '◀ Chọn Vòng';
+            return;
+        }
+
+        // 2. Khi đang ở Màn hình Chọn chủ đề -> Bấm quay lại sẽ về Menu chọn Vòng (hoặc Bảng cho Bố)
+        if (document.getElementById('topic-select-screen').style.display === 'block') {
+            document.getElementById('topic-select-screen').style.display = 'none';
+            if (parentMode) {
+                document.getElementById('parent-screen').style.display = 'block';
+            } else {
+                document.getElementById('menu-screen').style.display = 'block';
+                document.getElementById('back-btn').style.display = 'none';
+            }
+            return;
+        }
+
+        // 3. Khi đang trong Sổ tay từ vựng hoặc Bảng cho Bố
         if (document.getElementById('vocab-screen').style.display === 'block') {
             document.getElementById('vocab-screen').style.display = 'none';
             document.getElementById('menu-screen').style.display = 'block';
-            return;
-        }
-
-        if (parentMode && document.getElementById('topic-select-screen').style.display === 'block') {
-            document.getElementById('topic-select-screen').style.display = 'none';
-            document.getElementById('parent-screen').style.display = 'block';
-            return;
-        }
-
-        if (parentMode && document.getElementById('quiz-screen').style.display === 'block') {
-            document.getElementById('quiz-screen').style.display = 'none';
-            document.getElementById('topic-select-screen').style.display = 'block';
+            document.getElementById('back-btn').style.display = 'none';
             return;
         }
 
@@ -721,7 +731,8 @@
             document.getElementById('parent-screen').style.display = 'none';
             document.getElementById('back-btn').style.display = 'none';
         }
-        document.getElementById('progress').innerText = ''; document.getElementById('back-btn').innerText = '◀ Trang chủ';
+        document.getElementById('progress').innerText = ''; 
+        document.getElementById('back-btn').innerText = '◀ Trang chủ';
     }
 
     function openStore() {
@@ -732,6 +743,7 @@
         document.getElementById('menu-screen').style.display = 'none';
         document.getElementById('store-screen').style.display = 'block';
         document.getElementById('back-btn').style.display = 'block';
+        document.getElementById('back-btn').innerText = '◀ Trang chủ';
 
         const grid = document.getElementById('store-items'); grid.innerHTML = '';
         if (!userStats.inventory) userStats.inventory = {};
@@ -831,6 +843,7 @@
         document.getElementById('topic-select-screen').style.display = 'none';
         document.getElementById('quiz-screen').style.display = 'block';
         document.getElementById('back-btn').style.display = 'block';
+        document.getElementById('back-btn').innerText = '◀ Chọn chủ đề';
 
         if (mode === 'EXAM') {
             examQueue = [];
@@ -1022,22 +1035,17 @@
         if (el) speakText(el.innerText);
     }
 
-    // SỬA: LỌC BỎ TOÀN BỘ KÝ TỰ EMOJI KHI ĐỌC PHÁT ÂM TIẾNG ANH
     function speakText(text) {
         if ('speechSynthesis' in window) {
             window.speechSynthesis.cancel();
             
-            // 1. Loại bỏ phần dịch Tiếng Việt trong ngoặc đơn (...)
             let cleanText = text.replace(/\(.*\)/g, '');
-            
-            // 2. Lọc bỏ toàn bộ các ký tự Emoji Unicode để không đọc thành "Brain", "Light bulb"...
             cleanText = cleanText.replace(/[\u{1F300}-\u{1F6FF}\u{1F900}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu, '');
-            
             cleanText = cleanText.trim();
 
             const utterance = new SpeechSynthesisUtterance(cleanText);
             utterance.lang = 'en-US';
-            utterance.rate = 0.85; // Đọc với tốc độ vừa phải cho bé nghe
+            utterance.rate = 0.85;
             window.speechSynthesis.speak(utterance);
         }
     }
