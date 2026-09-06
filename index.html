@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TIMO Math Grade 1 - Easy Login</title>
+    <title>TIMO Math Grade 1 - Countdown Timer Included</title>
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
@@ -17,35 +17,57 @@
         .score-badge { background: #fef08a; color: #854d0e; padding: 8px 16px; border-radius: 20px; font-weight: bold; font-size: 18px; border: 2px solid #eab308; cursor: pointer; }
         .user-tag { font-size: 14px; font-weight: bold; color: #1e40af; background: #dbeafe; padding: 6px 12px; border-radius: 12px; }
 
+        /* Đồng hồ đếm ngược */
+        .timer-badge { background: #fee2e2; color: #991b1b; padding: 6px 12px; border-radius: 12px; font-weight: bold; font-size: 16px; border: 2px solid #f87171; display: none; align-items: center; gap: 4px; }
+
+        /* Danh sách tài khoản */
+        .account-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+        .account-card { background: #f0f9ff; border: 2px solid #3b82f6; border-radius: 16px; padding: 12px 16px; font-size: 18px; font-weight: bold; color: #1e40af; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+        .account-card:hover { background: #dbeafe; }
+        .delete-acc-btn { background: #ef4444; color: white; border: none; border-radius: 8px; padding: 6px 12px; font-size: 13px; font-weight: bold; cursor: pointer; margin-left: 10px; }
+        .delete-acc-btn:hover { background: #dc2626; }
+
+        /* 3 Vòng thi */
+        .rounds-container { display: flex; flex-direction: column; gap: 12px; margin-top: 15px; }
+        .round-card { border: 3px solid #cbd5e1; border-radius: 18px; padding: 16px; background: #f8fafc; cursor: pointer; transition: all 0.2s; position: relative; }
+        .round-card.unlocked { border-color: #3b82f6; background: #eff6ff; }
+        .round-card.unlocked:hover { background: #dbeafe; transform: translateY(-2px); }
+        .round-card.locked { opacity: 0.6; cursor: not-allowed; background: #f1f5f9; }
+        .round-title { font-size: 18px; font-weight: bold; color: #1e3a8a; display: flex; justify-content: space-between; align-items: center; }
+        .round-desc { font-size: 13px; color: #64748b; margin-top: 4px; }
+        .lock-badge { font-size: 12px; background: #e2e8f0; color: #475569; padding: 4px 8px; border-radius: 8px; font-weight: bold; }
+        .unlock-badge { font-size: 12px; background: #dcfce7; color: #15803d; padding: 4px 8px; border-radius: 8px; font-weight: bold; }
+
         .topic-menu { display: grid; gap: 10px; margin-top: 15px; }
         .topic-btn { background: #eff6ff; border: 3px solid #60a5fa; border-radius: 16px; padding: 14px 18px; font-size: 16px; font-weight: bold; color: #1e40af; cursor: pointer; text-align: left; transition: all 0.2s; }
         .topic-btn:hover { background: #dbeafe; transform: translateY(-2px); }
         .exam-btn { background: #fef3c7; border-color: #f59e0b; color: #92400e; }
         .store-btn { background: #fce7f3; border-color: #ec4899; color: #9d174d; text-align: center; }
-        .parent-btn { background: #f1f5f9; border-color: #94a3b8; color: #475569; text-align: center; }
+        .parent-btn { background: #f1f5f9; border-color: #94a3b8; color: #475569; text-align: center; width: 100%; margin-top: 15px; }
 
-        /* Danh sách tài khoản đã lưu */
-        .account-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
-        .account-card { background: #f0f9ff; border: 2px solid #3b82f6; border-radius: 16px; padding: 14px; font-size: 18px; font-weight: bold; color: #1e40af; cursor: pointer; text-align: center; display: flex; justify-content: space-between; align-items: center; }
-        .account-card:hover { background: #dbeafe; }
-
+        /* Tủ đồ chơi */
         .toy-cabinet { background: #fff7ed; border: 2px dashed #fdba74; border-radius: 16px; padding: 12px; margin-top: 15px; text-align: center; }
         .toy-cabinet-title { font-size: 15px; font-weight: bold; color: #c2410c; margin-bottom: 8px; }
-        .toy-list { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; min-height: 40px; align-items: center; }
-        .toy-item { font-size: 32px; animation: bounce 2s infinite alternate; }
-
-        @keyframes bounce { 0% { transform: translateY(0); } 100% { transform: translateY(-6px); } }
+        .toy-grid-summary { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 8px; margin-top: 10px; }
+        .toy-summary-card { background: white; border: 2px solid #fed7aa; border-radius: 12px; padding: 8px; display: flex; flex-direction: column; align-items: center; position: relative; }
+        .toy-summary-icon { font-size: 28px; }
+        .toy-summary-name { font-size: 11px; font-weight: bold; color: #9a3412; margin-top: 2px; }
+        .toy-summary-count { position: absolute; top: -6px; right: -6px; background: #ef4444; color: white; font-size: 11px; font-weight: bold; padding: 2px 6px; border-radius: 10px; border: 1px solid white; }
 
         .auth-box { text-align: center; padding: 10px; }
         .auth-input { width: 100%; padding: 14px; font-size: 18px; border: 2px solid #cbd5e1; border-radius: 12px; margin-bottom: 12px; text-align: center; font-weight: bold; }
         
-        .question-title { font-size: 20px; color: #1e3a8a; font-weight: bold; text-align: center; margin-bottom: 15px; }
-        .canvas-container { background: #fafafa; border: 3px dashed #cbd5e1; border-radius: 16px; position: relative; text-align: center; padding: 15px; margin-bottom: 15px; min-height: 220px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .question-title { font-size: 19px; color: #1e3a8a; font-weight: bold; text-align: center; margin-bottom: 15px; line-height: 1.4; }
+        .sub-bilingual { font-size: 14px; color: #64748b; font-weight: normal; display: block; margin-top: 4px; }
+
+        .canvas-container { background: #fafafa; border: 3px dashed #cbd5e1; border-radius: 16px; position: relative; text-align: center; padding: 15px; margin-bottom: 15px; min-height: 200px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
         .hint-text { font-size: 13px; color: #64748b; margin-top: 8px; font-style: italic; }
         
         svg { max-width: 100%; height: auto; }
         .clickable-edge { stroke: #3b82f6; stroke-width: 8; stroke-linecap: round; cursor: pointer; }
         .clickable-edge.clicked { stroke: #ef4444; stroke-width: 10; }
+        .clickable-vertex { fill: #3b82f6; stroke: #1d4ed8; stroke-width: 3; cursor: pointer; }
+        .clickable-vertex.clicked { fill: #ef4444; stroke: #991b1b; r: 12; }
 
         .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px; }
         .opt-btn { background: #f1f5f9; border: 3px solid #cbd5e1; border-radius: 16px; padding: 14px; font-size: 22px; font-weight: bold; color: #1e293b; cursor: pointer; }
@@ -64,9 +86,10 @@
         .wrong { color: #dc2626; }
 
         .store-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 15px; max-height: 420px; overflow-y: auto; padding-right: 5px; }
-        .store-item { background: #fdf2f8; border: 2px solid #f472b6; border-radius: 16px; padding: 12px; text-align: center; }
+        .store-item { background: #fdf2f8; border: 2px solid #f472b6; border-radius: 16px; padding: 12px; text-align: center; position: relative; }
         .store-icon { font-size: 40px; margin-bottom: 4px; }
         .store-name { font-weight: bold; color: #831843; font-size: 13px; margin-bottom: 4px; }
+        .owned-badge { position: absolute; top: 8px; right: 8px; background: #ec4899; color: white; font-size: 11px; font-weight: bold; padding: 2px 8px; border-radius: 10px; }
         .buy-btn { background: #ec4899; color: white; border: none; border-radius: 12px; padding: 8px 12px; font-weight: bold; cursor: pointer; width: 100%; }
         .buy-btn:disabled { background: #cbd5e1; cursor: not-allowed; }
 
@@ -84,59 +107,93 @@
     <!-- HEADER -->
     <div class="header">
         <button class="back-btn" id="back-btn" onclick="showMenu()" style="display: none;">◀ Trang chủ</button>
+        <div class="timer-badge" id="timer-display">⏱️ <span id="time-left">60:00</span></div>
         <span class="user-tag" id="user-display">Bé: Chưa chọn</span>
         <span style="font-size: 15px; font-weight: bold; color: #64748b;" id="progress"></span>
         <div class="score-badge" onclick="openStore()">⭐ <span id="stars">0</span></div>
     </div>
 
-    <!-- MÀN HÌNH ĐĂNG NHẬP / CHỌN TÀI KHOẢN CÓ SẴN -->
+    <!-- MÀN HÌNH ĐĂNG NHẬP -->
     <div id="auth-screen">
         <h2 style="text-align: center; color: #1e3a8a; margin-top: 0;">👋 XIN CHÀO BÉ!</h2>
         
-        <!-- DANH SÁCH TÀI KHOẢN ĐÃ LƯU -->
         <div id="saved-accounts-box" style="display: none;">
             <p style="color: #475569; font-weight: bold; margin-bottom: 8px;">Chọn tài khoản của bé:</p>
             <div class="account-list" id="account-list"></div>
             <p style="text-align: center; color: #64748b; font-size: 14px; margin: 10px 0;">--- Hoặc ---</p>
         </div>
 
-        <!-- TẠO TÀI KHOẢN MỚI -->
         <div class="auth-box">
             <p style="color: #475569; font-weight: 600; margin-top: 0;">Nhập tên bé mới:</p>
             <input type="text" id="student-name-input" class="auth-input" placeholder="Ví dụ: Bé Bi, Bé Nam..." maxlength="20">
             <div id="auth-error-msg" style="color: #ef4444; font-weight: bold; margin-bottom: 10px; display: none;"></div>
             <button class="action-btn" onclick="createNewStudent()">TẠO & VÀO HỌC NGAY ➔</button>
         </div>
+
+        <button class="topic-btn parent-btn" onclick="openParentDashboard()">🔒 BẢNG ĐIỀU KHIỂN CHO BỐ (DEBUG & CÀI ĐẶT)</button>
     </div>
 
     <!-- MENU CHÍNH -->
     <div id="menu-screen" style="display: none;">
         <div style="display: flex; justify-content: space-between; align-items: center;">
-            <h2 style="color: #1e3a8a; margin: 0;">🎯 TOÁN TIMO 1</h2>
-            <button class="back-btn" onclick="logoutStudent()" style="color: #ef4444;">[Đổi Bé Khác]</button>
+            <h2 style="color: #1e3a8a; margin: 0;">🎯 LỘ TRÌNH TIMO 1</h2>
+            <button class="back-btn" onclick="logoutStudent()" style="color: #ef4444;">[Đổi Bé]</button>
         </div>
 
-        <div class="topic-menu">
-            <button class="topic-btn exam-btn" onclick="startMode('EXAM')">🏆 THI THỬ 25 CÂU</button>
-            <button class="topic-btn" onclick="startMode('LOGIC')">🧠 1. Tư duy Logic</button>
-            <button class="topic-btn" onclick="startMode('ARITHMETIC')">🔢 2. Số học</button>
-            <button class="topic-btn" onclick="startMode('NUMBER_THEORY')">💡 3. Lý thuyết số</button>
-            <button class="topic-btn" onclick="startMode('GEOMETRY')">📐 4. Hình học</button>
-            <button class="topic-btn" onclick="startMode('COMBINATORICS')">🧩 5. Tổ hợp</button>
-            <button class="topic-btn store-btn" onclick="openStore()">🎁 CỬA HÀNG BÁU VẬT & SIÊU XE</button>
-            <button class="topic-btn parent-btn" onclick="openParentDashboard()">🔒 BẢNG ĐIỀU KHIỂN CHO BỐ</button>
+        <div class="rounds-container">
+            <div class="round-card unlocked" onclick="selectRound(1)">
+                <div class="round-title">
+                    <span>🥇 Vòng 1: Vòng Quốc Gia</span>
+                    <span class="unlock-badge">Đang Mở</span>
+                </div>
+                <div class="round-desc">Thời gian 60 phút. Đạt 20 lần thi thử ≥ 95% đúng để sang Vòng 2.</div>
+            </div>
+
+            <div class="round-card locked" id="round-card-2" onclick="selectRound(2)">
+                <div class="round-title">
+                    <span>🏆 Vòng 2: Chung Kết Quốc Gia</span>
+                    <span class="lock-badge" id="lock-tag-2">🔒 Cần 20 lần thi ≥ 95% Vòng 1</span>
+                </div>
+                <div class="round-desc">Thời gian 60 phút. Đạt 20 lần thi thử ≥ 90% đúng để sang Vòng 3.</div>
+            </div>
+
+            <div class="round-card locked" id="round-card-3" onclick="selectRound(3)">
+                <div class="round-title">
+                    <span>🌏 Vòng 3: Chung Kết Quốc Tế (Thailand)</span>
+                    <span class="lock-badge" id="lock-tag-3">🔒 Cần 20 lần thi ≥ 90% Vòng 2</span>
+                </div>
+                <div class="round-desc">Thời gian 60 phút. Chuẩn TIMO Quốc tế phạm vi ≤ 100.</div>
+            </div>
+        </div>
+
+        <div style="margin-top: 15px; display: flex; gap: 10px;">
+            <button class="topic-btn store-btn" style="flex:1;" onclick="openStore()">🎁 CỬA HÀNG EMOJI</button>
+            <button class="topic-btn parent-btn" style="flex:1; margin-top:0;" onclick="openParentDashboard()">🔒 BẢNG ĐIỀU KHIỂN</button>
         </div>
 
         <div class="toy-cabinet">
-            <div class="toy-cabinet-title">🧸 Bộ sưu tập của bé:</div>
-            <div class="toy-list" id="my-toys">Chưa có món quà nào. Hãy tích sao đổi nhé!</div>
+            <div class="toy-cabinet-title">🧸 Bộ sưu tập vật phẩm bé đã đổi:</div>
+            <div id="my-toys-summary">Chưa có món quà nào.</div>
+        </div>
+    </div>
+
+    <!-- CHỌN CHUYÊN ĐỀ -->
+    <div id="topic-select-screen" style="display: none;">
+        <h2 style="color: #1e3a8a; margin-top: 0; text-align: center;" id="selected-round-title">VÒNG THI 1</h2>
+        <div class="topic-menu">
+            <button class="topic-btn exam-btn" onclick="startMode('EXAM')">🏆 THI THỬ 25 CÂU (60 PHÚT)</button>
+            <button class="topic-btn" onclick="startMode('LOGIC')">🧠 1. Logical Thinking (Tư duy Logic)</button>
+            <button class="topic-btn" onclick="startMode('ARITHMETIC')">🔢 2. Arithmetic (Số học)</button>
+            <button class="topic-btn" onclick="startMode('NUMBER_THEORY')">💡 3. Number Theory (Lý thuyết số)</button>
+            <button class="topic-btn" onclick="startMode('GEOMETRY')">📐 4. Geometry (Hình học)</button>
+            <button class="topic-btn" onclick="startMode('COMBINATORICS')">🧩 5. Combinatorics (Tổ hợp)</button>
         </div>
     </div>
 
     <!-- CỬA HÀNG -->
     <div id="store-screen" style="display: none;">
         <h2 style="text-align: center; color: #9d174d; margin-top: 0; margin-bottom: 5px;">🎁 CỬA HÀNG BÁU VẬT</h2>
-        <p style="text-align: center; color: #475569; font-size: 13px; margin-top: 0;">Làm bài đúng tích ⭐ đổi Báu Vật & Siêu Xe nhé!</p>
+        <p style="text-align: center; color: #475569; font-size: 13px; margin-top: 0;">Đổi nhiều lần để sưu tầm số lượng siêu xe & robot nhé!</p>
         <div class="store-grid" id="store-items"></div>
     </div>
 
@@ -152,13 +209,46 @@
 
     <!-- BẢNG BỐ -->
     <div id="parent-screen" style="display: none;">
-        <h2 style="color: #1e3a8a; margin-top: 0;">📊 THỐNG KÊ TIẾN ĐỘ CỦA BÉ</h2>
-        <p style="color: #64748b; font-size: 14px;">Tổng số câu đã làm: <b id="total-done-count" style="color:#1e293b;">0</b> câu</p>
-        <div id="stats-container"></div>
-        
-        <hr style="border:0; border-top: 1px solid #e2e8f0; margin: 20px 0;">
-        <button class="action-btn warning-btn" onclick="resetStars()">⭐ RESET CHỈ SỐ NGÔI SAO VỀ 0</button>
-        <button class="action-btn danger-btn" onclick="resetAllData()">💥 RESET TOÀN BỘ DỮ LIỆU & TIẾN ĐỘ</button>
+        <h2 style="color: #1e3a8a; margin-top: 0; text-align: center;">🔒 BẢNG ĐIỀU KHIỂN CHO BỐ</h2>
+
+        <div id="parent-preview-rounds-box" style="display: none;">
+            <p style="text-align: center; color: #475569; font-size: 14px; margin-top: -5px; font-weight: 600;">Xem thử đề thi mạn phép bỏ qua mọi điều kiện khóa Vòng:</p>
+            <div class="rounds-container">
+                <div class="round-card unlocked" onclick="openRoundDirectly(1)">
+                    <div class="round-title">
+                        <span>🥇 Vòng 1: Vòng Quốc Gia</span>
+                        <span class="unlock-badge">Thử Đề V1</span>
+                    </div>
+                    <div class="round-desc">Phạm vi tính toán ≤ 20 (Song ngữ Anh - Việt)</div>
+                </div>
+
+                <div class="round-card unlocked" onclick="openRoundDirectly(2)">
+                    <div class="round-title">
+                        <span>🏆 Vòng 2: Chung Kết Quốc Gia</span>
+                        <span class="unlock-badge">Thử Đề V2</span>
+                    </div>
+                    <div class="round-desc">Phạm vi tính toán ≤ 50 (Song ngữ Anh - Việt)</div>
+                </div>
+
+                <div class="round-card unlocked" onclick="openRoundDirectly(3)">
+                    <div class="round-title">
+                        <span>🌏 Vòng 3: Chung Kết Quốc Tế (Thailand)</span>
+                        <span class="unlock-badge">Thử Đề V3</span>
+                    </div>
+                    <div class="round-desc">Chuẩn TIMO Quốc tế ≤ 100 (Song ngữ Anh - Việt)</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="parent-student-stats-box" style="display: none;">
+            <h3 style="color: #1e3a8a; margin-top: 0;">📊 THỐNG KÊ TIẾN ĐỘ CỦA BÉ</h3>
+            <p style="color: #64748b; font-size: 14px;">Số lần thi thử Vòng 1 đạt ≥ 95%: <b id="r1-pass-count" style="color:#1d4ed8;">0</b> / 20 lần</p>
+            <p style="color: #64748b; font-size: 14px;">Số lần thi thử Vòng 2 đạt ≥ 90%: <b id="r2-pass-count" style="color:#1d4ed8;">0</b> / 20 lần</p>
+            <p style="color: #64748b; font-size: 14px;">Tổng số câu đã làm: <b id="total-done-count" style="color:#1e293b;">0</b> câu</p>
+            <div id="stats-container"></div>
+            <button class="action-btn warning-btn" onclick="resetStars()">⭐ RESET CHỈ SỐ NGÔI SAO VỀ 0</button>
+            <button class="action-btn danger-btn" onclick="resetAllData()">💥 RESET TOÀN BỘ DỮ LIỆU & TIẾN ĐỘ</button>
+        </div>
     </div>
 </div>
 
@@ -179,11 +269,20 @@
 
     let currentStudentId = '';
     let currentStudentName = '';
+    let currentRound = 1;
+    let parentMode = false;
     
+    // Biến cho bộ đếm thời gian
+    let timerInterval = null;
+    let timeRemaining = 3600; // 60 phút = 3600 giây
+
     function getDefaultStats() {
         return {
             stars: 0,
             totalDone: 0,
+            r1PassCount: 0,
+            r2PassCount: 0,
+            inventory: {},
             myToys: [],
             topics: {
                 'LOGIC': { name: 'Tư duy Logic', correct: 0, wrong: 0, timeTotal: 0 },
@@ -200,13 +299,8 @@
     const availableToys = [
         { id: 'coin', name: 'Đồng Xu Vàng', icon: '🪙', price: 20 },
         { id: 'diamond', name: 'Kim Cương Đỏ', icon: '💎', price: 30 },
-        { id: 'bomb', name: 'Quả Bom', icon: '💣', price: 30 },
         { id: 'cup', name: 'Cúp Vô Địch', icon: '🏆', price: 40 },
-        { id: 'crown', name: 'Vương Miện Vua', icon: '👑', price: 40 },
         { id: 'sword', name: 'Song Đao', icon: '⚔️', price: 50 },
-        { id: 'shield', name: 'Khiên Báu', icon: '🛡️', price: 50 },
-        { id: 'police', name: 'Xe Cảnh Sát', icon: '🚓', price: 40 },
-        { id: 'fire', name: 'Xe Cứu Hỏa', icon: '🚒', price: 40 },
         { id: 'lambo', name: 'Siêu Xe Lambo', icon: '🏎️', price: 60 },
         { id: 'jet', name: 'Máy Bay Chiến Đấu', icon: '✈️', price: 80 },
         { id: 'rocket', name: 'Tên Lửa Vũ Trụ', icon: '🚀', price: 90 },
@@ -215,13 +309,18 @@
         { id: 'batman', name: 'Batman', icon: '🦇', price: 60 },
         { id: 'ironman', name: 'Iron Man', icon: '🦾', price: 70 },
         { id: 'optimus', name: 'Optimus Prime', icon: '🚛', price: 90 },
-        { id: 'bumblebee', name: 'Bumblebee', icon: '🐝', price: 90 },
         { id: 'gundam', name: 'Robot Gundam', icon: '🤖', price: 100 },
         { id: 'trex', name: 'Khủng Long T-Rex', icon: '🦖', price: 100 },
         { id: 'dragon', name: 'Rồng Lửa', icon: '🐉', price: 110 }
     ];
 
-    // LẤY DANH SÁCH TÀI KHOẢN ĐÃ KHAI BÁO
+    const names = ['David', 'Mary', 'Tom', 'Anna', 'Peter', 'John', 'Alex'];
+    const itemsList = [
+        {a: '🍎 Apples', b: '🍊 Oranges', c: '🍓 Strawberries'},
+        {a: '🍬 Candies', b: '🍪 Cookies', c: '🍫 Chocolates'},
+        {a: '✏️ Pencils', b: '📏 Rulers', c: '📖 Books'}
+    ];
+
     function renderSavedAccounts() {
         const savedList = JSON.parse(localStorage.getItem('timo_account_list') || '[]');
         const container = document.getElementById('account-list');
@@ -233,8 +332,10 @@
             savedList.forEach(acc => {
                 const card = document.createElement('div');
                 card.className = 'account-card';
-                card.innerHTML = `<span>👦 ${acc.name}</span> <span>➔</span>`;
-                card.onclick = () => selectAccount(acc.id, acc.name);
+                card.innerHTML = `
+                    <span onclick="selectAccount('${acc.id}', '${acc.name}')">👦 ${acc.name} ➔</span>
+                    <button class="delete-acc-btn" onclick="deleteAccount(event, '${acc.id}', '${acc.name}')">🗑️ Xoá</button>
+                `;
                 container.appendChild(card);
             });
         } else {
@@ -242,35 +343,39 @@
         }
     }
 
-    // CHỌN TÀI KHOẢN CÓ SẴN
-    function selectAccount(id, name) {
-        currentStudentId = id;
-        currentStudentName = name;
-        enterApp();
+    function deleteAccount(event, id, name) {
+        event.stopPropagation();
+        const password = prompt(`Nhập mật khẩu phụ huynh để xoá tài khoản "${name}":`);
+        if (password !== "1234") { alert("Mật khẩu không đúng!"); return; }
+
+        if (confirm(`Bố có chắc chắn muốn xoá tài khoản "${name}" khỏi thiết bị và hệ thống không?`)) {
+            let savedList = JSON.parse(localStorage.getItem('timo_account_list') || '[]');
+            savedList = savedList.filter(a => a.id !== id);
+            localStorage.setItem('timo_account_list', JSON.stringify(savedList));
+            localStorage.removeItem('timo_' + id);
+            if (db) db.ref('students/' + id).remove();
+
+            alert(`Đã xoá tài khoản "${name}" thành công!`);
+            renderSavedAccounts();
+        }
     }
 
-    // TẠO TÀI KHOẢN MỚI
+    function selectAccount(id, name) {
+        currentStudentId = id; currentStudentName = name; parentMode = false; enterApp();
+    }
+
     function createNewStudent() {
         const nameInput = document.getElementById('student-name-input').value.trim();
         const err = document.getElementById('auth-error-msg');
-
-        if (!nameInput) {
-            err.style.display = 'block';
-            err.innerText = '⚠️ Bé hãy nhập tên trước nhé!';
-            return;
-        }
+        if (!nameInput) { err.style.display = 'block'; err.innerText = '⚠️ Bé hãy nhập tên trước nhé!'; return; }
         err.style.display = 'none';
+        currentStudentName = nameInput; currentStudentId = nameInput.toLowerCase().replace(/\s+/g, '_'); parentMode = false;
 
-        currentStudentName = nameInput;
-        currentStudentId = nameInput.toLowerCase().replace(/\s+/g, '_');
-
-        // Lưu vào danh sách tài khoản thiết bị
         let savedList = JSON.parse(localStorage.getItem('timo_account_list') || '[]');
         if (!savedList.some(a => a.id === currentStudentId)) {
             savedList.push({ id: currentStudentId, name: currentStudentName });
             localStorage.setItem('timo_account_list', JSON.stringify(savedList));
         }
-
         enterApp();
     }
 
@@ -282,10 +387,11 @@
     }
 
     function logoutStudent() {
-        currentStudentId = '';
-        currentStudentName = '';
+        stopTimer();
+        currentStudentId = ''; currentStudentName = ''; parentMode = false;
         document.getElementById('user-display').innerText = `Bé: Chưa chọn`;
         document.getElementById('menu-screen').style.display = 'none';
+        document.getElementById('topic-select-screen').style.display = 'none';
         document.getElementById('auth-screen').style.display = 'block';
         renderSavedAccounts();
     }
@@ -295,14 +401,24 @@
         if (db) {
             db.ref('students/' + currentStudentId).on('value', (snapshot) => {
                 const data = snapshot.val();
-                if (data) { userStats = data; if(!userStats.myToys) userStats.myToys = []; }
-                else { userStats = getDefaultStats(); }
+                if (data) { 
+                    userStats = data; 
+                    if(!userStats.inventory) userStats.inventory = {};
+                    if(!userStats.myToys) userStats.myToys = []; 
+                    if(userStats.r1PassCount === undefined) userStats.r1PassCount = 0;
+                    if(userStats.r2PassCount === undefined) userStats.r2PassCount = 0;
+                } else { userStats = getDefaultStats(); }
                 updateUIProgress();
             });
         } else {
             const localData = localStorage.getItem('timo_' + currentStudentId);
-            if (localData) { userStats = JSON.parse(localData); if(!userStats.myToys) userStats.myToys = []; }
-            else { userStats = getDefaultStats(); }
+            if (localData) { 
+                userStats = JSON.parse(localData); 
+                if(!userStats.inventory) userStats.inventory = {};
+                if(!userStats.myToys) userStats.myToys = []; 
+                if(userStats.r1PassCount === undefined) userStats.r1PassCount = 0;
+                if(userStats.r2PassCount === undefined) userStats.r2PassCount = 0;
+            } else { userStats = getDefaultStats(); }
             updateUIProgress();
         }
     }
@@ -315,91 +431,241 @@
     }
 
     function updateUIProgress() {
-        document.getElementById('stars').innerText = userStats.stars || 0;
-        const cabinet = document.getElementById('my-toys');
-        if (userStats.myToys && userStats.myToys.length > 0) {
-            cabinet.innerHTML = userStats.myToys.map(icon => `<span class="toy-item">${icon}</span>`).join(' ');
+        const stars = userStats.stars || 0;
+        document.getElementById('stars').innerText = stars;
+
+        const r1Pass = userStats.r1PassCount || 0;
+        const r2Pass = userStats.r2PassCount || 0;
+
+        const r2Card = document.getElementById('round-card-2');
+        const r2Tag = document.getElementById('lock-tag-2');
+        if (r1Pass >= 20) {
+            r2Card.className = 'round-card unlocked';
+            r2Tag.className = 'unlock-badge'; r2Tag.innerText = 'Đang Mở';
         } else {
-            cabinet.innerText = "Chưa có món quà nào. Hãy tích sao đổi nhé!";
+            r2Card.className = 'round-card locked';
+            r2Tag.className = 'lock-badge'; r2Tag.innerText = `🔒 Cần ${r1Pass}/20 lần đạt ≥ 95%`;
         }
+
+        const r3Card = document.getElementById('round-card-3');
+        const r3Tag = document.getElementById('lock-tag-3');
+        if (r2Pass >= 20) {
+            r3Card.className = 'round-card unlocked';
+            r3Tag.className = 'unlock-badge'; r3Tag.innerText = 'Đang Mở';
+        } else {
+            r3Card.className = 'round-card locked';
+            r3Tag.className = 'lock-badge'; r3Tag.innerText = `🔒 Cần ${r2Pass}/20 lần đạt ≥ 90%`;
+        }
+
+        const summaryBox = document.getElementById('my-toys-summary');
+        const inv = userStats.inventory || {};
+        const toyKeys = Object.keys(inv).filter(k => inv[k] > 0);
+
+        if (toyKeys.length > 0) {
+            let html = '<div class="toy-grid-summary">';
+            toyKeys.forEach(toyId => {
+                const toy = availableToys.find(t => t.id === toyId);
+                if (toy) {
+                    html += `
+                        <div class="toy-summary-card">
+                            <span class="toy-summary-count">x${inv[toyId]}</span>
+                            <span class="toy-summary-icon">${toy.icon}</span>
+                            <span class="toy-summary-name">${toy.name}</span>
+                        </div>
+                    `;
+                }
+            });
+            html += '</div>';
+            summaryBox.innerHTML = html;
+        } else {
+            summaryBox.innerText = "Chưa có món quà nào. Bé hãy tích ⭐ đổi quà nhé!";
+        }
+    }
+
+    function selectRound(roundNum) {
+        const r1Pass = userStats.r1PassCount || 0;
+        const r2Pass = userStats.r2PassCount || 0;
+
+        if (roundNum === 2 && r1Pass < 20) { 
+            alert(`🔒 Vòng 2 chưa mở!\n\nĐiều kiện: Bé cần thi thử 25 câu Vòng 1 đạt từ 95% điểm số trở lên đủ 20 lần.\n(Hiện tại bé đã đạt: ${r1Pass}/20 lần)`); 
+            return; 
+        }
+        if (roundNum === 3 && r2Pass < 20) { 
+            alert(`🔒 Vòng 3 chưa mở!\n\nĐiều kiện: Bé cần thi thử 25 câu Vòng 2 đạt từ 90% điểm số trở lên đủ 20 lần.\n(Hiện tại bé đã đạt: ${r2Pass}/20 lần)`); 
+            return; 
+        }
+
+        openRoundDirectly(roundNum);
+    }
+
+    function openRoundDirectly(roundNum) {
+        if (document.getElementById('parent-screen').style.display === 'block') {
+            parentMode = true;
+        }
+
+        currentRound = roundNum;
+        const roundNames = ['🥇 VÒNG 1: QUỐC GIA', '🏆 VÒNG 2: CHUNG KẾT QUỐC GIA', '🌏 VÒNG 3: CHUNG KẾT QUỐC TẾ'];
+        document.getElementById('selected-round-title').innerText = roundNames[roundNum - 1];
+        
+        document.getElementById('menu-screen').style.display = 'none';
+        document.getElementById('parent-screen').style.display = 'none';
+        document.getElementById('topic-select-screen').style.display = 'block';
+        document.getElementById('back-btn').style.display = 'block';
+        document.getElementById('back-btn').innerText = parentMode ? '◀ Bảng Cho Bố' : '◀ Trang chủ';
     }
 
     function resetStars() {
         if (confirm("Bố có chắc chắn muốn đặt lại số ⭐ Ngôi sao của bé về 0 không?")) {
-            userStats.stars = 0;
-            saveProgress();
-            alert("Đã reset số Ngôi sao về 0 thành công!");
-            openParentDashboard();
+            userStats.stars = 0; saveProgress(); alert("Đã reset số Ngôi sao về 0 thành công!"); openParentDashboard();
         }
     }
 
     function resetAllData() {
-        if (confirm("⚠️ Hành động này sẽ xoá toàn bộ lịch sử làm bài và quà đã đổi của bé.\n\nBố có chắc chắn muốn RESET TOÀN BỘ không?")) {
-            userStats = getDefaultStats();
-            saveProgress();
-            alert("Đã xoá toàn bộ thống kê thử nghiệm thành công!");
-            openParentDashboard();
+        if (confirm("⚠️ Hành động này sẽ xoá toàn bộ tiến độ các vòng thi, lịch sử làm bài và quà đã đổi của bé.\n\nBố có chắc chắn muốn RESET TOÀN BỘ không?")) {
+            userStats = getDefaultStats(); saveProgress(); alert("Đã xoá toàn bộ thống kê thử nghiệm thành công!"); openParentDashboard();
         }
     }
 
     let mode = '', examQueue = [], currentQuestionIdx = 0, totalQuestions = 0;
     let clickedCount = 0, correctAnswer = 0, selectedOption = null, isConfirmed = false;
     let startTime = 0, currentTopicKey = '';
-
-    const names = ['Bé Nam', 'Bé Lan', 'Bé Minh', 'Bé An', 'Bé Bình'];
-    const items = [{a: '🍎 Táo', b: '🍊 Cam', c: '🍓 Dâu'}, {a: '🍬 Kẹo', b: '🍪 Bánh', c: '🍫 Socola'}];
+    let examCorrectCount = 0;
 
     function showMenu() {
-        document.getElementById('menu-screen').style.display = 'block';
-        document.getElementById('quiz-screen').style.display = 'none';
-        document.getElementById('store-screen').style.display = 'none';
-        document.getElementById('parent-screen').style.display = 'none';
-        document.getElementById('back-btn').style.display = 'none';
-        document.getElementById('progress').innerText = '';
+        stopTimer();
+        if (parentMode && document.getElementById('topic-select-screen').style.display === 'block') {
+            document.getElementById('topic-select-screen').style.display = 'none';
+            document.getElementById('parent-screen').style.display = 'block';
+            return;
+        }
+
+        if (parentMode && document.getElementById('quiz-screen').style.display === 'block') {
+            document.getElementById('quiz-screen').style.display = 'none';
+            document.getElementById('topic-select-screen').style.display = 'block';
+            return;
+        }
+
+        if (!currentStudentId) {
+            document.getElementById('auth-screen').style.display = 'block';
+            document.getElementById('topic-select-screen').style.display = 'none';
+            document.getElementById('quiz-screen').style.display = 'none';
+            document.getElementById('store-screen').style.display = 'none';
+            document.getElementById('parent-screen').style.display = 'none';
+            document.getElementById('back-btn').style.display = 'none';
+        } else {
+            document.getElementById('menu-screen').style.display = 'block';
+            document.getElementById('topic-select-screen').style.display = 'none';
+            document.getElementById('quiz-screen').style.display = 'none';
+            document.getElementById('store-screen').style.display = 'none';
+            document.getElementById('parent-screen').style.display = 'none';
+            document.getElementById('back-btn').style.display = 'none';
+        }
+        document.getElementById('progress').innerText = ''; document.getElementById('back-btn').innerText = '◀ Trang chủ';
     }
 
     function openStore() {
+        if (!currentStudentId) {
+            alert("Vui lòng chọn hoặc tạo tài khoản cho bé trước khi vào cửa hàng!");
+            return;
+        }
         document.getElementById('menu-screen').style.display = 'none';
         document.getElementById('store-screen').style.display = 'block';
         document.getElementById('back-btn').style.display = 'block';
 
-        const grid = document.getElementById('store-items');
-        grid.innerHTML = '';
+        const grid = document.getElementById('store-items'); grid.innerHTML = '';
+        if (!userStats.inventory) userStats.inventory = {};
 
         availableToys.forEach(toy => {
-            const isOwned = userStats.myToys && userStats.myToys.includes(toy.icon);
+            const countOwned = userStats.inventory[toy.id] || 0;
             const canAfford = userStats.stars >= toy.price;
-
-            const card = document.createElement('div');
-            card.className = 'store-item';
+            const card = document.createElement('div'); card.className = 'store-item';
             card.innerHTML = `
+                ${countOwned > 0 ? `<span class="owned-badge">Đã có x${countOwned}</span>` : ''}
                 <div class="store-icon">${toy.icon}</div>
                 <div class="store-name">${toy.name}</div>
                 <div style="font-weight:bold; color:#eab308; font-size:13px; margin-bottom:6px;">⭐ ${toy.price} Sao</div>
-                <button class="buy-btn" ${isOwned || !canAfford ? 'disabled' : ''} onclick="buyToy('${toy.icon}', ${toy.price}, '${toy.name}')">
-                    ${isOwned ? 'Đã Sở Hữu' : (canAfford ? 'Đổi Quà' : 'Thiếu Sao')}
+                <button class="buy-btn" ${!canAfford ? 'disabled' : ''} onclick="buyToy('${toy.id}', '${toy.icon}', ${toy.price}, '${toy.name}')">
+                    ${canAfford ? 'Đổi Quà' : 'Thiếu Sao'}
                 </button>
             `;
             grid.appendChild(card);
         });
     }
 
-    function buyToy(icon, price, name) {
+    function buyToy(toyId, icon, price, name) {
         if (userStats.stars >= price) {
             userStats.stars -= price;
-            if(!userStats.myToys) userStats.myToys = [];
-            userStats.myToys.push(icon);
-            saveProgress();
-            playVictorySound();
-            fireConfetti();
-            alert(`🎉 Chúc mừng bé đã sở hữu ${name} ${icon}!`);
+            if(!userStats.inventory) userStats.inventory = {};
+            userStats.inventory[toyId] = (userStats.inventory[toyId] || 0) + 1;
+            
+            saveProgress(); playVictorySound(); fireConfetti();
+            alert(`🎉 Chúc mừng bé đã sở hữu thêm ${name} ${icon}! (Số lượng hiện có: x${userStats.inventory[toyId]})`); 
             openStore();
         }
     }
 
+    // BẮT ĐẦU ĐỒNG HỒ ĐẾM NGƯỢC
+    function startTimer(durationInSeconds) {
+        stopTimer();
+        timeRemaining = durationInSeconds;
+        document.getElementById('timer-display').style.display = 'flex';
+        updateTimerDisplay();
+
+        timerInterval = setInterval(() => {
+            timeRemaining--;
+            updateTimerDisplay();
+
+            if (timeRemaining <= 0) {
+                stopTimer();
+                alert("⏰ ĐÃ HẾT GIỜ LÀM BÀI 60 PHÚT!\nHệ thống sẽ tự động nộp bài và tổng kết kết quả của bé.");
+                finishExamAuto();
+            }
+        }, 1000);
+    }
+
+    function stopTimer() {
+        if (timerInterval) {
+            clearInterval(timerInterval);
+            timerInterval = null;
+        }
+        document.getElementById('timer-display').style.display = 'none';
+    }
+
+    function updateTimerDisplay() {
+        const mins = Math.floor(timeRemaining / 60);
+        const secs = timeRemaining % 60;
+        document.getElementById('time-left').innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    function finishExamAuto() {
+        playVictorySound(); fireConfettiFull();
+        let examSummaryMsg = `⏰ Hết giờ làm bài! Bé tích lũy được tổng cộng ${userStats.stars} ⭐ Ngôi sao!`;
+        if (mode === 'EXAM') {
+            const accuracyRate = (examCorrectCount / 25) * 100;
+            examSummaryMsg += `\n\n📊 Kết quả bài thi thử 25 câu: Đúng ${examCorrectCount}/25 câu (${accuracyRate.toFixed(1)}%)`;
+
+            if (currentRound === 1 && accuracyRate >= 95) {
+                userStats.r1PassCount = (userStats.r1PassCount || 0) + 1;
+                examSummaryMsg += `\n\n✨ Xuất sắc! Bé đã đạt tiêu chuẩn Vòng 1 (Lần ${userStats.r1PassCount}/20).`;
+                if (userStats.r1PassCount >= 20) {
+                    examSummaryMsg += `\n🎉 CHÚC MỪNG BÉ ĐÃ MỞ KHÓA VÒNG 2!`;
+                }
+            } else if (currentRound === 2 && accuracyRate >= 90) {
+                userStats.r2PassCount = (userStats.r2PassCount || 0) + 1;
+                examSummaryMsg += `\n\n✨ Xuất sắc! Bé đã đạt tiêu chuẩn Vòng 2 (Lần ${userStats.r2PassCount}/20).`;
+                if (userStats.r2PassCount >= 20) {
+                    examSummaryMsg += `\n🎉 CHÚC MỪNG BÉ ĐÃ MỞ KHÓA VÒNG 3 (CHUNG KẾT QUỐC TẾ)!`;
+                }
+            }
+            saveProgress();
+        }
+        alert(examSummaryMsg);
+        showMenu();
+    }
+
     function startMode(selectedMode) {
-        mode = selectedMode; currentQuestionIdx = 0;
-        document.getElementById('menu-screen').style.display = 'none';
+        mode = selectedMode; currentQuestionIdx = 0; examCorrectCount = 0;
+        document.getElementById('topic-select-screen').style.display = 'none';
         document.getElementById('quiz-screen').style.display = 'block';
         document.getElementById('back-btn').style.display = 'block';
 
@@ -409,8 +675,10 @@
             topics.forEach(t => { for(let i=0; i<5; i++) examQueue.push(t); });
             examQueue.sort(() => Math.random() - 0.5);
             totalQuestions = 25;
+            startTimer(3600); // 60 phút thi thử
         } else {
             totalQuestions = 5;
+            stopTimer(); // Làm theo từng chuyên đề 5 câu không giới hạn thời gian
         }
         initQuestion();
     }
@@ -420,7 +688,7 @@
         document.getElementById('feedback').innerText = '';
         document.getElementById('confirm-btn').style.display = 'none';
         document.getElementById('next-btn').style.display = 'none';
-        document.getElementById('progress').innerText = `Câu ${currentQuestionIdx + 1}/${totalQuestions}`;
+        document.getElementById('progress').innerText = `Vòng ${currentRound} - Câu ${currentQuestionIdx + 1}/${totalQuestions}`;
 
         currentTopicKey = (mode === 'EXAM') ? examQueue[currentQuestionIdx] : mode;
 
@@ -434,78 +702,136 @@
         renderOptions(correctAnswer);
     }
 
+    function getMaxRange() {
+        if (currentRound === 1) return 20;
+        if (currentRound === 2) return 50;
+        return 100;
+    }
+
     function generateLogicProblem() {
-        document.getElementById('question-text').innerText = '🧠 Bài toán Xếp hàng';
         const name = names[Math.floor(Math.random() * names.length)];
-        const top = Math.floor(Math.random() * 5) + 2, bottom = Math.floor(Math.random() * 5) + 2;
+        const max = currentRound === 1 ? 5 : (currentRound === 2 ? 8 : 12);
+        const top = Math.floor(Math.random() * max) + 2;
+        const bottom = Math.floor(Math.random() * max) + 2;
         correctAnswer = top + bottom - 1;
-        document.getElementById('display-area').innerHTML = `<div class="text-problem">Trong một hàng dọc, <b>${name}</b> đứng thứ <b>${top}</b> từ trên xuống và đứng thứ <b>${bottom}</b> từ dưới lên.<br><br>Hỏi hàng đó có tất cả bao nhiêu bạn?</div>`;
+        document.getElementById('question-text').innerHTML = `🧠 In a line, <b>${name}</b> is <b>${top}th</b> from the top and <b>${bottom}th</b> from the bottom. How many students are there in the line?<span class="sub-bilingual">(Trong một hàng, ${name} đứng thứ ${top} từ trên xuống và thứ ${bottom} từ dưới lên. Hỏi hàng có bao nhiêu bạn?)</span>`;
+        document.getElementById('display-area').innerHTML = `<div class="text-problem">👤 Top: <b>${top}</b><br>👤 Bottom: <b>${bottom}</b></div>`;
     }
 
     function generateArithmeticProblem() {
-        document.getElementById('question-text').innerText = '🔢 Tính nhanh tổng dãy số';
-        const step = Math.floor(Math.random() * 2) + 1, start = 1, count = 4;
+        const maxLimit = getMaxRange();
         let seq = [], sum = 0;
-        for(let i=0; i<count; i++) { let val = start + i * step; seq.push(val); sum += val; }
+        while (true) {
+            const step = Math.floor(Math.random() * (currentRound * 2)) + 1;
+            const start = Math.floor(Math.random() * 5) + 1;
+            seq = []; sum = 0;
+            for(let i=0; i<4; i++) {
+                let val = start + i * step;
+                seq.push(val); sum += val;
+            }
+            if (sum <= maxLimit) break;
+        }
         correctAnswer = sum;
+        document.getElementById('question-text').innerHTML = `🔢 Find the sum of the sequence:<span class="sub-bilingual">(Tính nhanh tổng của dãy số sau:)</span>`;
         document.getElementById('display-area').innerHTML = `<div class="number-text">${seq.join(' + ')} = ?</div>`;
     }
 
     function generateNumberTheoryProblem() {
-        document.getElementById('question-text').innerText = '💡 Điền số thích hợp vào dấu [ ? ]';
-        const step = Math.floor(Math.random() * 3) + 2, start = Math.floor(Math.random() * 5) + 1;
+        const maxLimit = getMaxRange();
         let seq = [];
-        for(let i=0; i<5; i++) seq.push(start + i * step);
+        while (true) {
+            const step = Math.floor(Math.random() * 3) + 2;
+            const start = Math.floor(Math.random() * 5) + 1;
+            seq = [];
+            for(let i=0; i<5; i++) seq.push(start + i * step);
+            if (seq[seq.length - 1] <= maxLimit) break;
+        }
         const hideIdx = Math.floor(Math.random() * 3) + 1;
         correctAnswer = seq[hideIdx]; seq[hideIdx] = '[ ? ]';
+
+        document.getElementById('question-text').innerHTML = `💡 Fill the correct number into [ ? ]:<span class="sub-bilingual">(Điền số thích hợp vào dấu [ ? ] trong dãy số quy luật:)</span>`;
         document.getElementById('display-area').innerHTML = `<div class="number-text">${seq.join(', ')}</div>`;
     }
 
     function generateGeometryProblem() {
-        document.getElementById('question-text').innerText = '📐 Hình dưới đây có bao nhiêu CẠNH?';
-        const points = [[40, 30], [120, 30], [120, 110], [210, 110], [210, 180], [40, 180]];
+        const isSides = Math.random() < 0.5;
+        const points = generateRandomPolygon();
         correctAnswer = points.length;
         const display = document.getElementById('display-area');
-        display.innerHTML = '<svg id="svg" width="260" height="200" viewBox="0 0 260 200"></svg><div class="hint-text">💡 Chạm vào từng CẠNH để đếm</div>';
-        const svg = document.getElementById('svg');
-        points.forEach((p1, i) => {
-            const p2 = points[(i + 1) % points.length];
-            const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-            line.setAttribute('x1', p1[0]); line.setAttribute('y1', p1[1]);
-            line.setAttribute('x2', p2[0]); line.setAttribute('y2', p2[1]);
-            line.setAttribute('class', 'clickable-edge');
-            const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-            text.setAttribute('x', (p1[0] + p2[0]) / 2); text.setAttribute('y', (p1[1] + p2[1]) / 2);
-            text.setAttribute('fill', '#dc2626'); text.setAttribute('font-weight', 'bold');
-            line.onclick = () => {
-                if (!isConfirmed && !line.classList.contains('clicked')) {
-                    line.classList.add('clicked'); clickedCount++; text.textContent = clickedCount; playTapSound();
-                }
-            };
-            svg.appendChild(line); svg.appendChild(text);
-        });
+
+        if (isSides) {
+            document.getElementById('question-text').innerHTML = `📐 How many <b>edges</b> are there in the figure below?<span class="sub-bilingual">(Hình dưới đây có bao nhiêu CẠNH?)</span>`;
+            display.innerHTML = '<svg id="svg" width="260" height="200" viewBox="0 0 260 200"></svg><div class="hint-text">💡 Tap each EDGE to count (Chạm vào từng CẠNH)</div>';
+            const svg = document.getElementById('svg');
+            points.forEach((p1, i) => {
+                const p2 = points[(i + 1) % points.length];
+                const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                line.setAttribute('x1', p1[0]); line.setAttribute('y1', p1[1]);
+                line.setAttribute('x2', p2[0]); line.setAttribute('y2', p2[1]);
+                line.setAttribute('class', 'clickable-edge');
+                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                text.setAttribute('x', (p1[0] + p2[0]) / 2); text.setAttribute('y', (p1[1] + p2[1]) / 2);
+                text.setAttribute('fill', '#dc2626'); text.setAttribute('font-weight', 'bold');
+                line.onclick = () => {
+                    if (!isConfirmed && !line.classList.contains('clicked')) {
+                        line.classList.add('clicked'); clickedCount++; text.textContent = clickedCount; playTapSound();
+                    }
+                };
+                svg.appendChild(line); svg.appendChild(text);
+            });
+        } else {
+            document.getElementById('question-text').innerHTML = `📐 How many <b>vertices</b> are there in the figure below?<span class="sub-bilingual">(Hình dưới đây có bao nhiêu ĐỈNH / GÓC TRONG?)</span>`;
+            display.innerHTML = '<svg id="svg" width="260" height="200" viewBox="0 0 260 200"></svg><div class="hint-text">💡 Tap each VERTEX to count (Chạm vào từng ĐỈNH)</div>';
+            const svg = document.getElementById('svg');
+            const poly = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+            poly.setAttribute('points', points.map(p => p.join(',')).join(' '));
+            poly.setAttribute('fill', 'none'); poly.setAttribute('stroke', '#cbd5e1'); poly.setAttribute('stroke-width', '4');
+            svg.appendChild(poly);
+
+            points.forEach(p => {
+                const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                circle.setAttribute('cx', p[0]); circle.setAttribute('cy', p[1]);
+                circle.setAttribute('r', '8'); circle.setAttribute('class', 'clickable-vertex');
+                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                text.setAttribute('x', p[0]); text.setAttribute('y', p[1] - 10);
+                text.setAttribute('fill', '#dc2626'); text.setAttribute('font-weight', 'bold');
+                circle.onclick = () => {
+                    if (!isConfirmed && !circle.classList.contains('clicked')) {
+                        circle.classList.add('clicked'); clickedCount++; text.textContent = clickedCount; playTapSound();
+                    }
+                };
+                svg.appendChild(circle); svg.appendChild(text);
+            });
+        }
+    }
+
+    function generateRandomPolygon() {
+        const type = Math.floor(Math.random() * 4);
+        if (type === 0) return [[40, 30], [120, 30], [120, 110], [210, 110], [210, 180], [40, 180]];
+        if (type === 1) return [[40, 80], [150, 80], [150, 40], [230, 110], [150, 180], [150, 140], [40, 140]];
+        if (type === 2) return [[40, 30], [220, 30], [220, 80], [160, 80], [160, 180], [100, 180], [100, 80], [40, 80]];
+        return [[90, 30], [150, 30], [150, 80], [200, 80], [200, 130], [150, 130], [150, 180], [90, 180], [90, 130], [40, 130], [40, 80], [90, 80]];
     }
 
     function generateCombinatoricsProblem() {
-        document.getElementById('question-text').innerText = '🧩 Bài toán Quy đổi';
-        const set = items[Math.floor(Math.random() * items.length)];
-        const r1 = 2, r2 = 3;
+        const set = itemsList[Math.floor(Math.random() * itemsList.length)];
+        const r1 = Math.floor(Math.random() * 2) + 2;
+        const r2 = Math.floor(Math.random() * 2) + 2;
         correctAnswer = r1 * r2;
-        document.getElementById('display-area').innerHTML = `<div class="text-problem">Biết rằng:<br>1 ${set.a} = <b>${r1}</b> ${set.b}<br>1 ${set.b} = <b>${r2}</b> ${set.c}<br><br>Hỏi <b>1 ${set.a}</b> đổi được bao nhiêu <b>${set.c}</b>?</div>`;
+        document.getElementById('question-text').innerHTML = `🧩 Exchange Problem:<span class="sub-bilingual">(Bài toán quy đổi đồ vật:)</span>`;
+        document.getElementById('display-area').innerHTML = `<div class="text-problem">Given that:<br>1 ${set.a} = <b>${r1}</b> ${set.b}<br>1 ${set.b} = <b>${r2}</b> ${set.c}<br><br>How many <b>${set.c}</b> can <b>1 ${set.a}</b> exchange for?</div>`;
     }
 
     function renderOptions(correct) {
-        const optionsContainer = document.getElementById('options');
-        optionsContainer.innerHTML = '';
+        const optionsContainer = document.getElementById('options'); optionsContainer.innerHTML = '';
         let opts = new Set([correct]);
         while(opts.size < 4) {
-            let wrong = correct + (Math.floor(Math.random() * 5) - 2);
+            let wrong = correct + (Math.floor(Math.random() * 9) - 4);
             if (wrong > 0 && wrong !== correct) opts.add(wrong);
         }
         Array.from(opts).sort(() => Math.random() - 0.5).forEach(opt => {
-            const btn = document.createElement('button');
-            btn.className = 'opt-btn'; btn.innerText = opt; btn.id = `opt-${opt}`;
-            btn.onclick = () => selectOption(opt);
+            const btn = document.createElement('button'); btn.className = 'opt-btn';
+            btn.innerText = opt; btn.id = `opt-${opt}`; btn.onclick = () => selectOption(opt);
             optionsContainer.appendChild(btn);
         });
     }
@@ -521,8 +847,7 @@
 
     function confirmAnswer() {
         if (!selectedOption || isConfirmed) return;
-        isConfirmed = true;
-        document.getElementById('confirm-btn').style.display = 'none';
+        isConfirmed = true; document.getElementById('confirm-btn').style.display = 'none';
 
         const timeTaken = Math.round((Date.now() - startTime) / 1000);
         const isCorrect = (selectedOption === correctAnswer);
@@ -536,17 +861,14 @@
         const correctBtn = document.getElementById(`opt-${correctAnswer}`);
 
         if (isCorrect) {
-            userStats.topics[currentTopicKey].correct++;
-            userStats.stars += 10;
-            feedback.innerText = '🎉 Chính xác! Giỏi lắm con!';
-            feedback.className = 'feedback correct';
+            userStats.topics[currentTopicKey].correct++; userStats.stars += 10;
+            if (mode === 'EXAM') examCorrectCount++;
+            feedback.innerText = '🎉 Correct! Giỏi lắm con!'; feedback.className = 'feedback correct';
             selectedBtn.className = 'opt-btn correct-ans';
-            playCorrectSound();
-            fireConfetti();
+            playCorrectSound(); fireConfetti();
         } else {
             userStats.topics[currentTopicKey].wrong++;
-            feedback.innerText = `❌ Chưa đúng! Đáp án đúng là ${correctAnswer}`;
-            feedback.className = 'feedback wrong';
+            feedback.innerText = `❌ Incorrect! Đáp án đúng là ${correctAnswer}`; feedback.className = 'feedback wrong';
             selectedBtn.className = 'opt-btn wrong-ans';
             if (correctBtn) correctBtn.className = 'opt-btn correct-ans';
             playWrongSound();
@@ -561,97 +883,117 @@
         if (currentQuestionIdx < totalQuestions) {
             initQuestion();
         } else {
-            playVictorySound();
-            fireConfettiFull();
-            alert(`🎉 Hoàn thành bài luyện tập! Bé tích lũy được tổng cộng ${userStats.stars} ⭐ Ngôi sao!`);
+            stopTimer();
+            playVictorySound(); fireConfettiFull();
+            
+            let examSummaryMsg = `🎉 Hoàn thành bài thi! Bé tích lũy được tổng cộng ${userStats.stars} ⭐ Ngôi sao!`;
+            if (mode === 'EXAM') {
+                const accuracyRate = (examCorrectCount / 25) * 100;
+                examSummaryMsg += `\n\n📊 Kết quả bài thi thử 25 câu: Đúng ${examCorrectCount}/25 câu (${accuracyRate.toFixed(1)}%)`;
+
+                if (currentRound === 1 && accuracyRate >= 95) {
+                    userStats.r1PassCount = (userStats.r1PassCount || 0) + 1;
+                    examSummaryMsg += `\n\n✨ Xuất sắc! Bé đã đạt tiêu chuẩn Vòng 1 (Lần ${userStats.r1PassCount}/20).`;
+                    if (userStats.r1PassCount >= 20) {
+                        examSummaryMsg += `\n🎉 CHÚC MỪNG BÉ ĐÃ MỞ KHÓA VÒNG 2!`;
+                    }
+                } else if (currentRound === 2 && accuracyRate >= 90) {
+                    userStats.r2PassCount = (userStats.r2PassCount || 0) + 1;
+                    examSummaryMsg += `\n\n✨ Xuất sắc! Bé đã đạt tiêu chuẩn Vòng 2 (Lần ${userStats.r2PassCount}/20).`;
+                    if (userStats.r2PassCount >= 20) {
+                        examSummaryMsg += `\n🎉 CHÚC MỪNG BÉ ĐÃ MỞ KHÓA VÒNG 3 (CHUNG KẾT QUỐC TẾ)!`;
+                    }
+                }
+                saveProgress();
+            }
+
+            alert(examSummaryMsg);
             showMenu();
         }
     }
 
     function openParentDashboard() {
-        const password = prompt("Nhập mật khẩu phụ huynh để vào (Mặc định: 1234):");
+        const password = prompt("Nhập mật khẩu phụ huynh:");
         if (password !== "1234") { alert("Mật khẩu không đúng!"); return; }
 
+        document.getElementById('auth-screen').style.display = 'none';
         document.getElementById('menu-screen').style.display = 'none';
+        document.getElementById('topic-select-screen').style.display = 'none';
         document.getElementById('parent-screen').style.display = 'block';
         document.getElementById('back-btn').style.display = 'block';
 
-        document.getElementById('total-done-count').innerText = userStats.totalDone || 0;
-        const container = document.getElementById('stats-container');
-        container.innerHTML = '';
+        const previewBox = document.getElementById('parent-preview-rounds-box');
+        const statsBox = document.getElementById('parent-student-stats-box');
 
-        Object.keys(userStats.topics).forEach(key => {
-            const t = userStats.topics[key];
-            const total = t.correct + t.wrong;
-            const percent = total > 0 ? Math.round((t.correct / total) * 100) : 0;
-            const avgTime = total > 0 ? Math.round(t.timeTotal / total) : 0;
+        if (currentStudentId) {
+            previewBox.style.display = 'none';
+            statsBox.style.display = 'block';
 
-            const card = document.createElement('div');
-            card.className = 'stat-card';
-            card.innerHTML = `
-                <div style="font-weight:bold; color:#334155">${t.name}</div>
-                <div style="font-size: 13px; color: #475569; margin: 4px 0;">
-                    Đúng: <b style="color:#16a34a">${t.correct}</b> | Sai: <b style="color:#dc2626">${t.wrong}</b> | Tỷ lệ: <b>${percent}%</b> | TB: <b>${avgTime}s/câu</b>
-                </div>
-                <div class="stat-bar">
-                    <div class="stat-fill-correct" style="width: ${percent}%"></div>
-                    <div class="stat-fill-wrong" style="width: ${100 - percent}%"></div>
-                </div>
-            `;
-            container.appendChild(card);
-        });
+            document.getElementById('total-done-count').innerText = userStats.totalDone || 0;
+            document.getElementById('r1-pass-count').innerText = userStats.r1PassCount || 0;
+            document.getElementById('r2-pass-count').innerText = userStats.r2PassCount || 0;
+
+            const container = document.getElementById('stats-container'); container.innerHTML = '';
+
+            Object.keys(userStats.topics).forEach(key => {
+                const t = userStats.topics[key];
+                const total = t.correct + t.wrong;
+                const percent = total > 0 ? Math.round((t.correct / total) * 100) : 0;
+                const avgTime = total > 0 ? Math.round(t.timeTotal / total) : 0;
+
+                const card = document.createElement('div'); card.className = 'stat-card';
+                card.innerHTML = `
+                    <div style="font-weight:bold; color:#334155">${t.name}</div>
+                    <div style="font-size: 13px; color: #475569; margin: 4px 0;">
+                        Đúng: <b style="color:#16a34a">${t.correct}</b> | Sai: <b style="color:#dc2626">${t.wrong}</b> | Tỷ lệ: <b>${percent}%</b> | TB: <b>${avgTime}s/câu</b>
+                    </div>
+                    <div class="stat-bar">
+                        <div class="stat-fill-correct" style="width: ${percent}%"></div>
+                        <div class="stat-fill-wrong" style="width: ${100 - percent}%"></div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        } else {
+            previewBox.style.display = 'block';
+            statsBox.style.display = 'none';
+        }
     }
 
     function playTapSound() {
         const ctx = new (window.AudioContext || window.webkitAudioContext)();
-        const osc = ctx.createOscillator();
-        osc.type = 'sine'; osc.frequency.setValueAtTime(600, ctx.currentTime);
+        const osc = ctx.createOscillator(); osc.type = 'sine'; osc.frequency.setValueAtTime(600, ctx.currentTime);
         osc.connect(ctx.destination); osc.start(); osc.stop(ctx.currentTime + 0.05);
     }
 
     function playCorrectSound() {
-        const ctx = new (window.AudioContext || window.webkitAudioContext)();
-        const now = ctx.currentTime;
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(523.25, now);
-        osc.frequency.setValueAtTime(659.25, now + 0.1);
-        osc.frequency.setValueAtTime(783.99, now + 0.2);
-        gain.gain.setValueAtTime(0.3, now);
-        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
-        osc.connect(gain); gain.connect(ctx.destination);
-        osc.start(); osc.stop(now + 0.4);
+        const ctx = new (window.AudioContext || window.webkitAudioContext)(); const now = ctx.currentTime;
+        const osc = ctx.createOscillator(); const gain = ctx.createGain();
+        osc.type = 'triangle'; osc.frequency.setValueAtTime(523.25, now);
+        osc.frequency.setValueAtTime(659.25, now + 0.1); osc.frequency.setValueAtTime(783.99, now + 0.2);
+        gain.gain.setValueAtTime(0.3, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+        osc.connect(gain); gain.connect(ctx.destination); osc.start(); osc.stop(now + 0.4);
     }
 
     function playWrongSound() {
-        const ctx = new (window.AudioContext || window.webkitAudioContext)();
-        const now = ctx.currentTime;
-        const osc = ctx.createOscillator();
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(200, now);
-        osc.frequency.setValueAtTime(150, now + 0.15);
-        osc.connect(ctx.destination);
-        osc.start(); osc.stop(now + 0.3);
+        const ctx = new (window.AudioContext || window.webkitAudioContext)(); const now = ctx.currentTime;
+        const osc = ctx.createOscillator(); osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(200, now); osc.frequency.setValueAtTime(150, now + 0.15);
+        osc.connect(ctx.destination); osc.start(); osc.stop(now + 0.3);
     }
 
     function playVictorySound() {
-        const ctx = new (window.AudioContext || window.webkitAudioContext)();
-        const now = ctx.currentTime;
+        const ctx = new (window.AudioContext || window.webkitAudioContext)(); const now = ctx.currentTime;
         [523.25, 659.25, 783.99, 1046.50].forEach((freq, idx) => {
-            const osc = ctx.createOscillator();
-            osc.type = 'sine';
+            const osc = ctx.createOscillator(); osc.type = 'sine';
             osc.frequency.setValueAtTime(freq, now + idx * 0.12);
-            osc.connect(ctx.destination);
-            osc.start(now + idx * 0.12);
-            osc.stop(now + idx * 0.12 + 0.15);
+            osc.connect(ctx.destination); osc.start(now + idx * 0.12); osc.stop(now + idx * 0.12 + 0.15);
         });
     }
 
     function fireConfetti() { confetti({ particleCount: 50, spread: 60, origin: { y: 0.7 } }); }
     function fireConfettiFull() { confetti({ particleCount: 150, spread: 100, origin: { y: 0.5 } }); }
 
-    // Khởi tạo màn hình chính
     renderSavedAccounts();
 </script>
 
