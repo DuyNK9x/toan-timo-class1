@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TIMO Math Grade 1 - Countdown Timer Included</title>
+    <title>TIMO Math Grade 1 - Full Ultimate Features Fixed</title>
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
@@ -12,22 +12,21 @@
     <style>
         * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; user-select: none; }
         body { background-color: #f0f9ff; margin: 0; padding: 20px; display: flex; justify-content: center; }
-        .app-card { background: white; border-radius: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 600px; padding: 24px; border: 4px solid #3b82f6; position: relative; }
+        .app-card { background: white; border-radius: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 620px; padding: 24px; border: 4px solid #3b82f6; position: relative; }
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .score-badge { background: #fef08a; color: #854d0e; padding: 8px 16px; border-radius: 20px; font-weight: bold; font-size: 18px; border: 2px solid #eab308; cursor: pointer; }
         .user-tag { font-size: 14px; font-weight: bold; color: #1e40af; background: #dbeafe; padding: 6px 12px; border-radius: 12px; }
 
-        /* Đồng hồ đếm ngược */
         .timer-badge { background: #fee2e2; color: #991b1b; padding: 6px 12px; border-radius: 12px; font-weight: bold; font-size: 16px; border: 2px solid #f87171; display: none; align-items: center; gap: 4px; }
 
-        /* Danh sách tài khoản */
+        /* Account list */
         .account-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
         .account-card { background: #f0f9ff; border: 2px solid #3b82f6; border-radius: 16px; padding: 12px 16px; font-size: 18px; font-weight: bold; color: #1e40af; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
         .account-card:hover { background: #dbeafe; }
         .delete-acc-btn { background: #ef4444; color: white; border: none; border-radius: 8px; padding: 6px 12px; font-size: 13px; font-weight: bold; cursor: pointer; margin-left: 10px; }
         .delete-acc-btn:hover { background: #dc2626; }
 
-        /* 3 Vòng thi */
+        /* 3 Rounds */
         .rounds-container { display: flex; flex-direction: column; gap: 12px; margin-top: 15px; }
         .round-card { border: 3px solid #cbd5e1; border-radius: 18px; padding: 16px; background: #f8fafc; cursor: pointer; transition: all 0.2s; position: relative; }
         .round-card.unlocked { border-color: #3b82f6; background: #eff6ff; }
@@ -43,9 +42,10 @@
         .topic-btn:hover { background: #dbeafe; transform: translateY(-2px); }
         .exam-btn { background: #fef3c7; border-color: #f59e0b; color: #92400e; }
         .store-btn { background: #fce7f3; border-color: #ec4899; color: #9d174d; text-align: center; }
-        .parent-btn { background: #f1f5f9; border-color: #94a3b8; color: #475569; text-align: center; width: 100%; margin-top: 15px; }
+        .vocab-btn { background: #e0e7ff; border-color: #818cf8; color: #3730a3; text-align: center; }
+        .review-btn { background: #fef2f2; border-color: #f87171; color: #991b1b; text-align: center; }
+        .parent-btn { background: #f1f5f9; border-color: #94a3b8; color: #475569; text-align: center; width: 100%; margin-top: 12px; }
 
-        /* Tủ đồ chơi */
         .toy-cabinet { background: #fff7ed; border: 2px dashed #fdba74; border-radius: 16px; padding: 12px; margin-top: 15px; text-align: center; }
         .toy-cabinet-title { font-size: 15px; font-weight: bold; color: #c2410c; margin-bottom: 8px; }
         .toy-grid-summary { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 8px; margin-top: 10px; }
@@ -57,8 +57,10 @@
         .auth-box { text-align: center; padding: 10px; }
         .auth-input { width: 100%; padding: 14px; font-size: 18px; border: 2px solid #cbd5e1; border-radius: 12px; margin-bottom: 12px; text-align: center; font-weight: bold; }
         
-        .question-title { font-size: 19px; color: #1e3a8a; font-weight: bold; text-align: center; margin-bottom: 15px; line-height: 1.4; }
+        .question-header { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 15px; }
+        .question-title { font-size: 19px; color: #1e3a8a; font-weight: bold; text-align: center; line-height: 1.4; margin: 0; }
         .sub-bilingual { font-size: 14px; color: #64748b; font-weight: normal; display: block; margin-top: 4px; }
+        .audio-btn { background: #dbeafe; border: 2px solid #3b82f6; border-radius: 50%; width: 42px; height: 42px; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 
         .canvas-container { background: #fafafa; border: 3px dashed #cbd5e1; border-radius: 16px; position: relative; text-align: center; padding: 15px; margin-bottom: 15px; min-height: 200px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
         .hint-text { font-size: 13px; color: #64748b; margin-top: 8px; font-style: italic; }
@@ -93,12 +95,31 @@
         .buy-btn { background: #ec4899; color: white; border: none; border-radius: 12px; padding: 8px 12px; font-weight: bold; cursor: pointer; width: 100%; }
         .buy-btn:disabled { background: #cbd5e1; cursor: not-allowed; }
 
+        /* Vocabulary Flashcard Grid */
+        .vocab-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 15px; max-height: 420px; overflow-y: auto; }
+        .vocab-card { background: #f5f3ff; border: 2px solid #a78bfa; border-radius: 16px; padding: 12px; text-align: center; }
+        .vocab-en { font-size: 16px; font-weight: bold; color: #4c1d95; }
+        .vocab-vi { font-size: 13px; color: #6d28d9; margin-top: 4px; }
+
+        /* Leaderboard Table */
+        .leaderboard-table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+        .leaderboard-table th, .leaderboard-table td { padding: 10px; text-align: left; border-bottom: 1px solid #e2e8f0; font-size: 14px; }
+        .leaderboard-table th { background: #eff6ff; color: #1e40af; font-weight: bold; }
+
+        /* Certificate Modal */
+        .certificate-box { background: #fffbebf7; border: 8px double #f59e0b; border-radius: 20px; padding: 20px; text-align: center; position: relative; margin-top: 15px; }
+        .certificate-title { font-size: 22px; font-weight: bold; color: #92400e; margin-bottom: 8px; }
+        .certificate-name { font-size: 26px; font-weight: bold; color: #1d4ed8; text-decoration: underline; margin: 10px 0; }
+
         .stat-card { background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 12px; padding: 12px; margin-bottom: 10px; }
         .stat-bar { background: #e2e8f0; height: 12px; border-radius: 6px; overflow: hidden; display: flex; }
         .stat-fill-correct { background: #22c55e; height: 100%; }
         .stat-fill-wrong { background: #ef4444; height: 100%; }
         .number-text { font-size: 30px; font-weight: bold; color: #1d4ed8; letter-spacing: 2px; }
         .text-problem { font-size: 18px; color: #334155; line-height: 1.6; font-weight: 600; text-align: left; }
+
+        .setting-input-group { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; font-size: 14px; font-weight: bold; color: #334155; }
+        .setting-input { width: 80px; padding: 6px; border: 2px solid #cbd5e1; border-radius: 8px; text-align: center; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -146,7 +167,7 @@
                     <span>🥇 Vòng 1: Vòng Quốc Gia</span>
                     <span class="unlock-badge">Đang Mở</span>
                 </div>
-                <div class="round-desc">Thời gian 60 phút. Đạt 20 lần thi thử ≥ 95% đúng để sang Vòng 2.</div>
+                <div class="round-desc" id="round-1-desc-text">Thời gian 60 phút. Đạt 20 lần thi thử ≥ 95% đúng để sang Vòng 2.</div>
             </div>
 
             <div class="round-card locked" id="round-card-2" onclick="selectRound(2)">
@@ -154,7 +175,7 @@
                     <span>🏆 Vòng 2: Chung Kết Quốc Gia</span>
                     <span class="lock-badge" id="lock-tag-2">🔒 Cần 20 lần thi ≥ 95% Vòng 1</span>
                 </div>
-                <div class="round-desc">Thời gian 60 phút. Đạt 20 lần thi thử ≥ 90% đúng để sang Vòng 3.</div>
+                <div class="round-desc" id="round-2-desc-text">Thời gian 60 phút. Đạt 20 lần thi thử ≥ 90% đúng để sang Vòng 3.</div>
             </div>
 
             <div class="round-card locked" id="round-card-3" onclick="selectRound(3)">
@@ -166,9 +187,21 @@
             </div>
         </div>
 
-        <div style="margin-top: 15px; display: flex; gap: 10px;">
-            <button class="topic-btn store-btn" style="flex:1;" onclick="openStore()">🎁 CỬA HÀNG EMOJI</button>
-            <button class="topic-btn parent-btn" style="flex:1; margin-top:0;" onclick="openParentDashboard()">🔒 BẢNG ĐIỀU KHIỂN</button>
+        <!-- BẰNG KHEN ẢO KHI HOÀN THÀNH -->
+        <div id="certificate-container" style="display: none;">
+            <div class="certificate-box">
+                <div class="certificate-title">🏆 BẰNG KHEN VINH DANH 🏆</div>
+                <div>Chúc mừng thí sinh xuất sắc:</div>
+                <div class="certificate-name" id="cert-student-name">BÉ BI</div>
+                <div style="font-size: 13px; color: #78350f;">Đã chính thức chinh phục thành công lộ trình thi Olympic Toán Quốc Tế TIMO Lớp 1!</div>
+            </div>
+        </div>
+
+        <div style="margin-top: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+            <button class="topic-btn store-btn" onclick="openStore()">🎁 CỬA HÀNG EMOJI</button>
+            <button class="topic-btn vocab-btn" onclick="openVocab()">📖 SỔ TAY TỪ VỰNG</button>
+            <button class="topic-btn review-btn" onclick="openWrongReview()">🔄 ÔN CÂU LÀM SAI</button>
+            <button class="topic-btn parent-btn" style="margin-top:0;" onclick="openParentDashboard()">🔒 BẢNG ĐIỀU KHIỂN</button>
         </div>
 
         <div class="toy-cabinet">
@@ -177,17 +210,24 @@
         </div>
     </div>
 
-    <!-- CHỌN CHUYÊN ĐỀ -->
+    <!-- MÀN HÌNH CHỌN CHUYÊN ĐỀ -->
     <div id="topic-select-screen" style="display: none;">
         <h2 style="color: #1e3a8a; margin-top: 0; text-align: center;" id="selected-round-title">VÒNG THI 1</h2>
         <div class="topic-menu">
-            <button class="topic-btn exam-btn" onclick="startMode('EXAM')">🏆 THI THỬ 25 CÂU (60 PHÚT)</button>
+            <button class="topic-btn exam-btn" id="exam-mode-btn" onclick="startMode('EXAM')">🏆 THI THỬ 25 CÂU HỖN HỢP</button>
             <button class="topic-btn" onclick="startMode('LOGIC')">🧠 1. Logical Thinking (Tư duy Logic)</button>
             <button class="topic-btn" onclick="startMode('ARITHMETIC')">🔢 2. Arithmetic (Số học)</button>
             <button class="topic-btn" onclick="startMode('NUMBER_THEORY')">💡 3. Number Theory (Lý thuyết số)</button>
             <button class="topic-btn" onclick="startMode('GEOMETRY')">📐 4. Geometry (Hình học)</button>
             <button class="topic-btn" onclick="startMode('COMBINATORICS')">🧩 5. Combinatorics (Tổ hợp)</button>
         </div>
+    </div>
+
+    <!-- SỔ TAY TỪ VỰNG SONG NGỮ -->
+    <div id="vocab-screen" style="display: none;">
+        <h2 style="text-align: center; color: #3730a3; margin-top: 0;">📖 SỔ TAY TỪ VỰNG SONG NGỮ TIMO</h2>
+        <p style="text-align: center; color: #475569; font-size: 13px; margin-top: -5px;">Bé bấm vào nút 🔊 để nghe phát âm Tiếng Anh chuẩn nhé!</p>
+        <div class="vocab-grid" id="vocab-list-container"></div>
     </div>
 
     <!-- CỬA HÀNG -->
@@ -199,7 +239,10 @@
 
     <!-- LÀM BÀI -->
     <div id="quiz-screen" style="display: none;">
-        <div class="question-title" id="question-text">...</div>
+        <div class="question-header">
+            <div class="question-title" id="question-text">...</div>
+            <button class="audio-btn" onclick="speakCurrentQuestion()" title="Nghe phát âm">🔊</button>
+        </div>
         <div class="canvas-container" id="display-area"></div>
         <div class="feedback" id="feedback"></div>
         <div class="options-grid" id="options"></div>
@@ -211,6 +254,7 @@
     <div id="parent-screen" style="display: none;">
         <h2 style="color: #1e3a8a; margin-top: 0; text-align: center;">🔒 BẢNG ĐIỀU KHIỂN CHO BỐ</h2>
 
+        <!-- KHỐI XEM THỬ 3 VÒNG (CHỈ HIỂN THỊ KHI VÀO TỪ MÀN HÌNH ĐĂNG NHẬP BÊN NGOÀI) -->
         <div id="parent-preview-rounds-box" style="display: none;">
             <p style="text-align: center; color: #475569; font-size: 14px; margin-top: -5px; font-weight: 600;">Xem thử đề thi mạn phép bỏ qua mọi điều kiện khóa Vòng:</p>
             <div class="rounds-container">
@@ -240,10 +284,57 @@
             </div>
         </div>
 
-        <div id="parent-student-stats-box" style="display: none;">
+        <!-- KHỐI BẢNG XẾP HẠNG GIA ĐÌNH -->
+        <div style="background: #f8fafc; border: 2px solid #cbd5e1; border-radius: 16px; padding: 14px; margin-top: 15px;">
+            <h3 style="color: #1e3a8a; margin-top: 0;">🏆 BẢNG XẾP HẠNG THI ĐỦA TRONG GIA ĐÌNH</h3>
+            <table class="leaderboard-table">
+                <thead>
+                    <tr>
+                        <th>Tên bé</th>
+                        <th>⭐ Sao</th>
+                        <th>Số câu</th>
+                        <th>Vòng 1</th>
+                        <th>Vòng 2</th>
+                    </tr>
+                </thead>
+                <tbody id="family-leaderboard-body"></tbody>
+            </table>
+        </div>
+
+        <!-- KHỐI CÀI ĐẶT THỜI GIAN & TIÊU CHUẨN LÊN LỚP -->
+        <div style="background: #fffbeef7; border: 2px solid #fde68a; border-radius: 16px; padding: 14px; margin-top: 15px;">
+            <h3 style="color: #92400e; margin-top: 0;">⚙️ TÙY CHỈNH TIÊU CHUẨN LÊN LỚP</h3>
+            <div class="setting-input-group">
+                <span>Thời gian thi thử (phút):</span>
+                <input type="number" id="setting-timer-min" class="setting-input" value="60" min="1" max="120">
+            </div>
+            <div class="setting-input-group">
+                <span>Số lần đạt V1 để mở V2:</span>
+                <input type="number" id="setting-v1-pass-req" class="setting-input" value="20" min="1" max="50">
+            </div>
+            <div class="setting-input-group">
+                <span>Số lần đạt V2 để mở V3:</span>
+                <input type="number" id="setting-v2-pass-req" class="setting-input" value="20" min="1" max="50">
+            </div>
+            <button class="action-btn" style="padding: 10px; font-size: 14px; margin-top: 5px;" onclick="saveCustomSettings()">LƯU TÙY CHỈNH</button>
+        </div>
+
+        <!-- KHỐI SAO LƯU & ĐỔI MẬT KHẨU PHỤ HUYNH -->
+        <div style="background: #f1f5f9; border: 2px solid #cbd5e1; border-radius: 16px; padding: 14px; margin-top: 15px;">
+            <h3 style="color: #334155; margin-top: 0;">🔒 BẢO MẬT & SAO LƯU DỮ LIỆU</h3>
+            <button class="action-btn" style="padding: 10px; font-size: 14px; background: #475569;" onclick="changeParentPassword()">🔑 ĐỔI MẬT KHẨU PHỤ HUYNH</button>
+            <div style="display: flex; gap: 8px; margin-top: 8px;">
+                <button class="action-btn" style="padding: 10px; font-size: 14px; background: #059669; flex: 1;" onclick="exportDataJSON()">📤 XUẤT SAO LƯU (JSON)</button>
+                <button class="action-btn" style="padding: 10px; font-size: 14px; background: #0d9488; flex: 1;" onclick="document.getElementById('import-file-input').click()">📥 NHẬP SAO LƯU</button>
+                <input type="file" id="import-file-input" style="display: none;" accept=".json" onchange="importDataJSON(event)">
+            </div>
+        </div>
+
+        <!-- KHỐI THỐNG KÊ TIẾN ĐỘ (CHỈ HIỂN THỊ KHI ĐÃ CHỌN BÉ) -->
+        <div id="parent-student-stats-box" style="display: none; margin-top: 15px;">
             <h3 style="color: #1e3a8a; margin-top: 0;">📊 THỐNG KÊ TIẾN ĐỘ CỦA BÉ</h3>
-            <p style="color: #64748b; font-size: 14px;">Số lần thi thử Vòng 1 đạt ≥ 95%: <b id="r1-pass-count" style="color:#1d4ed8;">0</b> / 20 lần</p>
-            <p style="color: #64748b; font-size: 14px;">Số lần thi thử Vòng 2 đạt ≥ 90%: <b id="r2-pass-count" style="color:#1d4ed8;">0</b> / 20 lần</p>
+            <p style="color: #64748b; font-size: 14px;">Số lần thi thử Vòng 1 đạt ≥ 95%: <b id="r1-pass-count" style="color:#1d4ed8;">0</b> / <span id="r1-req-display">20</span> lần</p>
+            <p style="color: #64748b; font-size: 14px;">Số lần thi thử Vòng 2 đạt ≥ 90%: <b id="r2-pass-count" style="color:#1d4ed8;">0</b> / <span id="r2-req-display">20</span> lần</p>
             <p style="color: #64748b; font-size: 14px;">Tổng số câu đã làm: <b id="total-done-count" style="color:#1e293b;">0</b> câu</p>
             <div id="stats-container"></div>
             <button class="action-btn warning-btn" onclick="resetStars()">⭐ RESET CHỈ SỐ NGÔI SAO VỀ 0</button>
@@ -271,10 +362,30 @@
     let currentStudentName = '';
     let currentRound = 1;
     let parentMode = false;
+    let isReviewWrongMode = false;
     
     // Biến cho bộ đếm thời gian
     let timerInterval = null;
-    let timeRemaining = 3600; // 60 phút = 3600 giây
+    let timeRemaining = 3600;
+
+    // Cài đặt tùy chỉnh của phụ huynh
+    let parentPassword = localStorage.getItem('timo_parent_pass') || '1234';
+    let appSettings = JSON.parse(localStorage.getItem('timo_app_settings') || '{"timerMin": 60, "v1Req": 20, "v2Req": 20}');
+
+    const vocabList = [
+        { en: "Logical Thinking", vi: "Tư duy Logic", icon: "🧠" },
+        { en: "Arithmetic", vi: "Số học", icon: "🔢" },
+        { en: "Number Theory", vi: "Lý thuyết số", icon: "💡" },
+        { en: "Geometry", vi: "Hình học", icon: "📐" },
+        { en: "Combinatorics", vi: "Tổ hợp", icon: "🧩" },
+        { en: "Edges", vi: "Cạnh (của đa giác)", icon: "📏" },
+        { en: "Vertices", vi: "Đỉnh / Góc trong", icon: "📍" },
+        { en: "In a line / queue", vi: "Trong một hàng dọc", icon: "👤" },
+        { en: "Top / Bottom", vi: "Từ trên xuống / Từ dưới lên", icon: "⬆️" },
+        { en: "Sequence / Pattern", vi: "Dãy số có quy luật", icon: "📊" },
+        { en: "Exchange", vi: "Bài toán quy đổi vật phẩm", icon: "🔄" },
+        { en: "Sum", vi: "Tổng số", icon: "➕" }
+    ];
 
     function getDefaultStats() {
         return {
@@ -283,6 +394,7 @@
             r1PassCount: 0,
             r2PassCount: 0,
             inventory: {},
+            wrongBank: [],
             myToys: [],
             topics: {
                 'LOGIC': { name: 'Tư duy Logic', correct: 0, wrong: 0, timeTotal: 0 },
@@ -346,7 +458,7 @@
     function deleteAccount(event, id, name) {
         event.stopPropagation();
         const password = prompt(`Nhập mật khẩu phụ huynh để xoá tài khoản "${name}":`);
-        if (password !== "1234") { alert("Mật khẩu không đúng!"); return; }
+        if (password !== parentPassword) { alert("Mật khẩu không đúng!"); return; }
 
         if (confirm(`Bố có chắc chắn muốn xoá tài khoản "${name}" khỏi thiết bị và hệ thống không?`)) {
             let savedList = JSON.parse(localStorage.getItem('timo_account_list') || '[]');
@@ -392,6 +504,7 @@
         document.getElementById('user-display').innerText = `Bé: Chưa chọn`;
         document.getElementById('menu-screen').style.display = 'none';
         document.getElementById('topic-select-screen').style.display = 'none';
+        document.getElementById('vocab-screen').style.display = 'none';
         document.getElementById('auth-screen').style.display = 'block';
         renderSavedAccounts();
     }
@@ -404,6 +517,7 @@
                 if (data) { 
                     userStats = data; 
                     if(!userStats.inventory) userStats.inventory = {};
+                    if(!userStats.wrongBank) userStats.wrongBank = [];
                     if(!userStats.myToys) userStats.myToys = []; 
                     if(userStats.r1PassCount === undefined) userStats.r1PassCount = 0;
                     if(userStats.r2PassCount === undefined) userStats.r2PassCount = 0;
@@ -415,6 +529,7 @@
             if (localData) { 
                 userStats = JSON.parse(localData); 
                 if(!userStats.inventory) userStats.inventory = {};
+                if(!userStats.wrongBank) userStats.wrongBank = [];
                 if(!userStats.myToys) userStats.myToys = []; 
                 if(userStats.r1PassCount === undefined) userStats.r1PassCount = 0;
                 if(userStats.r2PassCount === undefined) userStats.r2PassCount = 0;
@@ -436,25 +551,38 @@
 
         const r1Pass = userStats.r1PassCount || 0;
         const r2Pass = userStats.r2PassCount || 0;
+        const reqV1 = appSettings.v1Req || 20;
+        const reqV2 = appSettings.v2Req || 20;
+
+        document.getElementById('round-1-desc-text').innerText = `Thời gian ${appSettings.timerMin} phút. Đạt ${reqV1} lần thi thử ≥ 95% đúng để sang Vòng 2.`;
+        document.getElementById('round-2-desc-text').innerText = `Thời gian ${appSettings.timerMin} phút. Đạt ${reqV2} lần thi thử ≥ 90% đúng để sang Vòng 3.`;
+        document.getElementById('exam-mode-btn').innerText = `🏆 THI THỬ 25 CÂU (${appSettings.timerMin} PHÚT)`;
 
         const r2Card = document.getElementById('round-card-2');
         const r2Tag = document.getElementById('lock-tag-2');
-        if (r1Pass >= 20) {
+        if (r1Pass >= reqV1) {
             r2Card.className = 'round-card unlocked';
             r2Tag.className = 'unlock-badge'; r2Tag.innerText = 'Đang Mở';
         } else {
             r2Card.className = 'round-card locked';
-            r2Tag.className = 'lock-badge'; r2Tag.innerText = `🔒 Cần ${r1Pass}/20 lần đạt ≥ 95%`;
+            r2Tag.className = 'lock-badge'; r2Tag.innerText = `🔒 Cần ${r1Pass}/${reqV1} lần đạt ≥ 95%`;
         }
 
         const r3Card = document.getElementById('round-card-3');
         const r3Tag = document.getElementById('lock-tag-3');
-        if (r2Pass >= 20) {
+        if (r2Pass >= reqV2) {
             r3Card.className = 'round-card unlocked';
             r3Tag.className = 'unlock-badge'; r3Tag.innerText = 'Đang Mở';
         } else {
             r3Card.className = 'round-card locked';
-            r3Tag.className = 'lock-badge'; r3Tag.innerText = `🔒 Cần ${r2Pass}/20 lần đạt ≥ 90%`;
+            r3Tag.className = 'lock-badge'; r3Tag.innerText = `🔒 Cần ${r2Pass}/${reqV2} lần đạt ≥ 90%`;
+        }
+
+        if (r2Pass >= reqV2) {
+            document.getElementById('certificate-container').style.display = 'block';
+            document.getElementById('cert-student-name').innerText = currentStudentName.toUpperCase();
+        } else {
+            document.getElementById('certificate-container').style.display = 'none';
         }
 
         const summaryBox = document.getElementById('my-toys-summary');
@@ -485,13 +613,15 @@
     function selectRound(roundNum) {
         const r1Pass = userStats.r1PassCount || 0;
         const r2Pass = userStats.r2PassCount || 0;
+        const reqV1 = appSettings.v1Req || 20;
+        const reqV2 = appSettings.v2Req || 20;
 
-        if (roundNum === 2 && r1Pass < 20) { 
-            alert(`🔒 Vòng 2 chưa mở!\n\nĐiều kiện: Bé cần thi thử 25 câu Vòng 1 đạt từ 95% điểm số trở lên đủ 20 lần.\n(Hiện tại bé đã đạt: ${r1Pass}/20 lần)`); 
+        if (roundNum === 2 && r1Pass < reqV1) { 
+            alert(`🔒 Vòng 2 chưa mở!\n\nĐiều kiện: Bé cần thi thử 25 câu Vòng 1 đạt từ 95% điểm số trở lên đủ ${reqV1} lần.\n(Hiện tại bé đã đạt: ${r1Pass}/${reqV1} lần)`); 
             return; 
         }
-        if (roundNum === 3 && r2Pass < 20) { 
-            alert(`🔒 Vòng 3 chưa mở!\n\nĐiều kiện: Bé cần thi thử 25 câu Vòng 2 đạt từ 90% điểm số trở lên đủ 20 lần.\n(Hiện tại bé đã đạt: ${r2Pass}/20 lần)`); 
+        if (roundNum === 3 && r2Pass < reqV2) { 
+            alert(`🔒 Vòng 3 chưa mở!\n\nĐiều kiện: Bé cần thi thử 25 câu Vòng 2 đạt từ 90% điểm số trở lên đủ ${reqV2} lần.\n(Hiện tại bé đã đạt: ${r2Pass}/${reqV2} lần)`); 
             return; 
         }
 
@@ -514,6 +644,40 @@
         document.getElementById('back-btn').innerText = parentMode ? '◀ Bảng Cho Bố' : '◀ Trang chủ';
     }
 
+    function openVocab() {
+        document.getElementById('menu-screen').style.display = 'none';
+        document.getElementById('vocab-screen').style.display = 'block';
+        document.getElementById('back-btn').style.display = 'block';
+
+        const container = document.getElementById('vocab-list-container'); container.innerHTML = '';
+        vocabList.forEach(v => {
+            const card = document.createElement('div'); card.className = 'vocab-card';
+            card.innerHTML = `
+                <div style="font-size:32px;">${v.icon}</div>
+                <div class="vocab-en">${v.en} <button class="audio-btn" style="width:28px; height:28px; font-size:14px; display:inline-flex;" onclick="speakText('${v.en}')">🔊</button></div>
+                <div class="vocab-vi">${v.vi}</div>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    function openWrongReview() {
+        if (!userStats.wrongBank || userStats.wrongBank.length === 0) {
+            alert("🎉 Tuyệt vời! Bé chưa có câu hỏi làm sai nào cần luyện lại.");
+            return;
+        }
+        isReviewWrongMode = true;
+        mode = 'REVIEW';
+        currentQuestionIdx = 0;
+        totalQuestions = userStats.wrongBank.length;
+
+        document.getElementById('menu-screen').style.display = 'none';
+        document.getElementById('quiz-screen').style.display = 'block';
+        document.getElementById('back-btn').style.display = 'block';
+
+        initQuestion();
+    }
+
     function resetStars() {
         if (confirm("Bố có chắc chắn muốn đặt lại số ⭐ Ngôi sao của bé về 0 không?")) {
             userStats.stars = 0; saveProgress(); alert("Đã reset số Ngôi sao về 0 thành công!"); openParentDashboard();
@@ -533,6 +697,14 @@
 
     function showMenu() {
         stopTimer();
+        isReviewWrongMode = false;
+
+        if (document.getElementById('vocab-screen').style.display === 'block') {
+            document.getElementById('vocab-screen').style.display = 'none';
+            document.getElementById('menu-screen').style.display = 'block';
+            return;
+        }
+
         if (parentMode && document.getElementById('topic-select-screen').style.display === 'block') {
             document.getElementById('topic-select-screen').style.display = 'none';
             document.getElementById('parent-screen').style.display = 'block';
@@ -604,7 +776,6 @@
         }
     }
 
-    // BẮT ĐẦU ĐỒNG HỒ ĐẾM NGƯỢC
     function startTimer(durationInSeconds) {
         stopTimer();
         timeRemaining = durationInSeconds;
@@ -617,7 +788,7 @@
 
             if (timeRemaining <= 0) {
                 stopTimer();
-                alert("⏰ ĐÃ HẾT GIỜ LÀM BÀI 60 PHÚT!\nHệ thống sẽ tự động nộp bài và tổng kết kết quả của bé.");
+                alert(`⏰ ĐÃ HẾT GIỜ LÀM BÀI ${appSettings.timerMin} PHÚT!\nHệ thống sẽ tự động nộp bài và tổng kết kết quả của bé.`);
                 finishExamAuto();
             }
         }, 1000);
@@ -644,16 +815,19 @@
             const accuracyRate = (examCorrectCount / 25) * 100;
             examSummaryMsg += `\n\n📊 Kết quả bài thi thử 25 câu: Đúng ${examCorrectCount}/25 câu (${accuracyRate.toFixed(1)}%)`;
 
+            const reqV1 = appSettings.v1Req || 20;
+            const reqV2 = appSettings.v2Req || 20;
+
             if (currentRound === 1 && accuracyRate >= 95) {
                 userStats.r1PassCount = (userStats.r1PassCount || 0) + 1;
-                examSummaryMsg += `\n\n✨ Xuất sắc! Bé đã đạt tiêu chuẩn Vòng 1 (Lần ${userStats.r1PassCount}/20).`;
-                if (userStats.r1PassCount >= 20) {
+                examSummaryMsg += `\n\n✨ Xuất sắc! Bé đã đạt tiêu chuẩn Vòng 1 (Lần ${userStats.r1PassCount}/${reqV1}).`;
+                if (userStats.r1PassCount >= reqV1) {
                     examSummaryMsg += `\n🎉 CHÚC MỪNG BÉ ĐÃ MỞ KHÓA VÒNG 2!`;
                 }
             } else if (currentRound === 2 && accuracyRate >= 90) {
                 userStats.r2PassCount = (userStats.r2PassCount || 0) + 1;
-                examSummaryMsg += `\n\n✨ Xuất sắc! Bé đã đạt tiêu chuẩn Vòng 2 (Lần ${userStats.r2PassCount}/20).`;
-                if (userStats.r2PassCount >= 20) {
+                examSummaryMsg += `\n\n✨ Xuất sắc! Bé đã đạt tiêu chuẩn Vòng 2 (Lần ${userStats.r2PassCount}/${reqV2}).`;
+                if (userStats.r2PassCount >= reqV2) {
                     examSummaryMsg += `\n🎉 CHÚC MỪNG BÉ ĐÃ MỞ KHÓA VÒNG 3 (CHUNG KẾT QUỐC TẾ)!`;
                 }
             }
@@ -664,7 +838,7 @@
     }
 
     function startMode(selectedMode) {
-        mode = selectedMode; currentQuestionIdx = 0; examCorrectCount = 0;
+        mode = selectedMode; currentQuestionIdx = 0; examCorrectCount = 0; isReviewWrongMode = false;
         document.getElementById('topic-select-screen').style.display = 'none';
         document.getElementById('quiz-screen').style.display = 'block';
         document.getElementById('back-btn').style.display = 'block';
@@ -675,10 +849,10 @@
             topics.forEach(t => { for(let i=0; i<5; i++) examQueue.push(t); });
             examQueue.sort(() => Math.random() - 0.5);
             totalQuestions = 25;
-            startTimer(3600); // 60 phút thi thử
+            startTimer((appSettings.timerMin || 60) * 60);
         } else {
             totalQuestions = 5;
-            stopTimer(); // Làm theo từng chuyên đề 5 câu không giới hạn thời gian
+            stopTimer();
         }
         initQuestion();
     }
@@ -688,16 +862,25 @@
         document.getElementById('feedback').innerText = '';
         document.getElementById('confirm-btn').style.display = 'none';
         document.getElementById('next-btn').style.display = 'none';
-        document.getElementById('progress').innerText = `Vòng ${currentRound} - Câu ${currentQuestionIdx + 1}/${totalQuestions}`;
+        
+        if (isReviewWrongMode) {
+            document.getElementById('progress').innerText = `Ôn lại - Câu ${currentQuestionIdx + 1}/${totalQuestions}`;
+            const item = userStats.wrongBank[currentQuestionIdx];
+            currentTopicKey = item.topic;
+            correctAnswer = item.correct;
+            document.getElementById('question-text').innerHTML = item.questionHtml;
+            document.getElementById('display-area').innerHTML = item.displayHtml;
+        } else {
+            document.getElementById('progress').innerText = `Vòng ${currentRound} - Câu ${currentQuestionIdx + 1}/${totalQuestions}`;
+            currentTopicKey = (mode === 'EXAM') ? examQueue[currentQuestionIdx] : mode;
 
-        currentTopicKey = (mode === 'EXAM') ? examQueue[currentQuestionIdx] : mode;
-
-        switch(currentTopicKey) {
-            case 'LOGIC': generateLogicProblem(); break;
-            case 'ARITHMETIC': generateArithmeticProblem(); break;
-            case 'NUMBER_THEORY': generateNumberTheoryProblem(); break;
-            case 'GEOMETRY': generateGeometryProblem(); break;
-            case 'COMBINATORICS': generateCombinatoricsProblem(); break;
+            switch(currentTopicKey) {
+                case 'LOGIC': generateLogicProblem(); break;
+                case 'ARITHMETIC': generateArithmeticProblem(); break;
+                case 'NUMBER_THEORY': generateNumberTheoryProblem(); break;
+                case 'GEOMETRY': generateGeometryProblem(); break;
+                case 'COMBINATORICS': generateCombinatoricsProblem(); break;
+            }
         }
         renderOptions(correctAnswer);
     }
@@ -845,6 +1028,22 @@
         playTapSound();
     }
 
+    function speakCurrentQuestion() {
+        const el = document.getElementById('question-text');
+        if (el) speakText(el.innerText);
+    }
+
+    function speakText(text) {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const cleanText = text.replace(/\(.*\)/g, '').trim();
+            const utterance = new SpeechSynthesisUtterance(cleanText);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.9;
+            window.speechSynthesis.speak(utterance);
+        }
+    }
+
     function confirmAnswer() {
         if (!selectedOption || isConfirmed) return;
         isConfirmed = true; document.getElementById('confirm-btn').style.display = 'none';
@@ -866,12 +1065,26 @@
             feedback.innerText = '🎉 Correct! Giỏi lắm con!'; feedback.className = 'feedback correct';
             selectedBtn.className = 'opt-btn correct-ans';
             playCorrectSound(); fireConfetti();
+
+            if (isReviewWrongMode && userStats.wrongBank) {
+                userStats.wrongBank.splice(currentQuestionIdx, 1);
+            }
         } else {
             userStats.topics[currentTopicKey].wrong++;
             feedback.innerText = `❌ Incorrect! Đáp án đúng là ${correctAnswer}`; feedback.className = 'feedback wrong';
             selectedBtn.className = 'opt-btn wrong-ans';
             if (correctBtn) correctBtn.className = 'opt-btn correct-ans';
             playWrongSound();
+
+            if (!isReviewWrongMode) {
+                if (!userStats.wrongBank) userStats.wrongBank = [];
+                userStats.wrongBank.push({
+                    topic: currentTopicKey,
+                    questionHtml: document.getElementById('question-text').innerHTML,
+                    displayHtml: document.getElementById('display-area').innerHTML,
+                    correct: correctAnswer
+                });
+            }
         }
 
         saveProgress();
@@ -891,16 +1104,19 @@
                 const accuracyRate = (examCorrectCount / 25) * 100;
                 examSummaryMsg += `\n\n📊 Kết quả bài thi thử 25 câu: Đúng ${examCorrectCount}/25 câu (${accuracyRate.toFixed(1)}%)`;
 
+                const reqV1 = appSettings.v1Req || 20;
+                const reqV2 = appSettings.v2Req || 20;
+
                 if (currentRound === 1 && accuracyRate >= 95) {
                     userStats.r1PassCount = (userStats.r1PassCount || 0) + 1;
-                    examSummaryMsg += `\n\n✨ Xuất sắc! Bé đã đạt tiêu chuẩn Vòng 1 (Lần ${userStats.r1PassCount}/20).`;
-                    if (userStats.r1PassCount >= 20) {
+                    examSummaryMsg += `\n\n✨ Xuất sắc! Bé đã đạt tiêu chuẩn Vòng 1 (Lần ${userStats.r1PassCount}/${reqV1}).`;
+                    if (userStats.r1PassCount >= reqV1) {
                         examSummaryMsg += `\n🎉 CHÚC MỪNG BÉ ĐÃ MỞ KHÓA VÒNG 2!`;
                     }
                 } else if (currentRound === 2 && accuracyRate >= 90) {
                     userStats.r2PassCount = (userStats.r2PassCount || 0) + 1;
-                    examSummaryMsg += `\n\n✨ Xuất sắc! Bé đã đạt tiêu chuẩn Vòng 2 (Lần ${userStats.r2PassCount}/20).`;
-                    if (userStats.r2PassCount >= 20) {
+                    examSummaryMsg += `\n\n✨ Xuất sắc! Bé đã đạt tiêu chuẩn Vòng 2 (Lần ${userStats.r2PassCount}/${reqV2}).`;
+                    if (userStats.r2PassCount >= reqV2) {
                         examSummaryMsg += `\n🎉 CHÚC MỪNG BÉ ĐÃ MỞ KHÓA VÒNG 3 (CHUNG KẾT QUỐC TẾ)!`;
                     }
                 }
@@ -914,21 +1130,30 @@
 
     function openParentDashboard() {
         const password = prompt("Nhập mật khẩu phụ huynh:");
-        if (password !== "1234") { alert("Mật khẩu không đúng!"); return; }
+        if (password !== parentPassword) { alert("Mật khẩu không đúng!"); return; }
 
         document.getElementById('auth-screen').style.display = 'none';
         document.getElementById('menu-screen').style.display = 'none';
         document.getElementById('topic-select-screen').style.display = 'none';
+        document.getElementById('vocab-screen').style.display = 'none';
         document.getElementById('parent-screen').style.display = 'block';
         document.getElementById('back-btn').style.display = 'block';
 
         const previewBox = document.getElementById('parent-preview-rounds-box');
         const statsBox = document.getElementById('parent-student-stats-box');
 
+        renderLeaderboard();
+
+        document.getElementById('setting-timer-min').value = appSettings.timerMin || 60;
+        document.getElementById('setting-v1-pass-req').value = appSettings.v1Req || 20;
+        document.getElementById('setting-v2-pass-req').value = appSettings.v2Req || 20;
+
         if (currentStudentId) {
             previewBox.style.display = 'none';
             statsBox.style.display = 'block';
 
+            document.getElementById('r1-req-display').innerText = appSettings.v1Req || 20;
+            document.getElementById('r2-req-display').innerText = appSettings.v2Req || 20;
             document.getElementById('total-done-count').innerText = userStats.totalDone || 0;
             document.getElementById('r1-pass-count').innerText = userStats.r1PassCount || 0;
             document.getElementById('r2-pass-count').innerText = userStats.r2PassCount || 0;
@@ -958,6 +1183,108 @@
             previewBox.style.display = 'block';
             statsBox.style.display = 'none';
         }
+    }
+
+    function renderLeaderboard() {
+        const savedList = JSON.parse(localStorage.getItem('timo_account_list') || '[]');
+        const tbody = document.getElementById('family-leaderboard-body'); tbody.innerHTML = '';
+
+        let leaderboardData = [];
+        savedList.forEach(acc => {
+            const data = JSON.parse(localStorage.getItem('timo_' + acc.id) || '{}');
+            leaderboardData.push({
+                name: acc.name,
+                stars: data.stars || 0,
+                totalDone: data.totalDone || 0,
+                v1: data.r1PassCount || 0,
+                v2: data.r2PassCount || 0
+            });
+        });
+
+        leaderboardData.sort((a, b) => b.stars - a.stars);
+
+        if (leaderboardData.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#94a3b8;">Chưa có tài khoản nào.</td></tr>';
+            return;
+        }
+
+        leaderboardData.forEach((row, idx) => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td><b>${idx === 0 ? '👑 ' : ''}${row.name}</b></td>
+                <td><b style="color:#eab308">${row.stars}</b></td>
+                <td>${row.totalDone}</td>
+                <td>${row.v1}/${appSettings.v1Req}</td>
+                <td>${row.v2}/${appSettings.v2Req}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function changeParentPassword() {
+        const newPass = prompt("Nhập mật khẩu mới cho Bảng phụ huynh:");
+        if (newPass && newPass.trim().length > 0) {
+            parentPassword = newPass.trim();
+            localStorage.setItem('timo_parent_pass', parentPassword);
+            alert("🔑 Đã cập nhật mật khẩu phụ huynh mới thành công!");
+        }
+    }
+
+    function saveCustomSettings() {
+        const timerMin = parseInt(document.getElementById('setting-timer-min').value) || 60;
+        const v1Req = parseInt(document.getElementById('setting-v1-pass-req').value) || 20;
+        const v2Req = parseInt(document.getElementById('setting-v2-pass-req').value) || 20;
+
+        appSettings = { timerMin, v1Req, v2Req };
+        localStorage.setItem('timo_app_settings', JSON.stringify(appSettings));
+        alert("⚙️ Đã lưu cài đặt tiêu chuẩn thi mới thành công!");
+        updateUIProgress();
+    }
+
+    function exportDataJSON() {
+        const data = {
+            accounts: JSON.parse(localStorage.getItem('timo_account_list') || '[]'),
+            parentPass: parentPassword,
+            settings: appSettings,
+            students: {}
+        };
+
+        data.accounts.forEach(acc => {
+            data.students[acc.id] = JSON.parse(localStorage.getItem('timo_' + acc.id) || '{}');
+        });
+
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `TIMO_Math_Backup_${new Date().toISOString().slice(0, 10)}.json`;
+        a.click();
+    }
+
+    function importDataJSON(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const data = JSON.parse(e.target.result);
+                if (data.accounts) localStorage.setItem('timo_account_list', JSON.stringify(data.accounts));
+                if (data.parentPass) { parentPassword = data.parentPass; localStorage.setItem('timo_parent_pass', parentPassword); }
+                if (data.settings) { appSettings = data.settings; localStorage.setItem('timo_app_settings', JSON.stringify(appSettings)); }
+                if (data.students) {
+                    Object.keys(data.students).forEach(id => {
+                        localStorage.setItem('timo_' + id, JSON.stringify(data.students[id]));
+                        if (db) db.ref('students/' + id).set(data.students[id]);
+                    });
+                }
+                alert("📥 Nhập dữ liệu sao lưu thành công!");
+                renderSavedAccounts();
+                openParentDashboard();
+            } catch(err) {
+                alert("❌ File sao lưu không hợp lệ!");
+            }
+        };
+        reader.readAsText(file);
     }
 
     function playTapSound() {
