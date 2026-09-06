@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TIMO Math Grade 1 - Fixed Navigation Flow</title>
+    <title>TIMO Math Grade 1 - Fixed Store Overlay Bug</title>
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
@@ -352,7 +352,8 @@
     let currentRound = 1;
     let parentMode = false;
     let isReviewWrongMode = false;
-    
+    let previousScreenBeforeStore = ''; // Lưu màn hình trước khi mở Cửa hàng
+
     let timerInterval = null;
     let timeRemaining = 3600;
 
@@ -628,7 +629,7 @@
         document.getElementById('parent-screen').style.display = 'none';
         document.getElementById('topic-select-screen').style.display = 'block';
         document.getElementById('back-btn').style.display = 'block';
-        document.getElementById('back-btn').innerText = parentMode ? '◀ Bảng Cho Bố' : '◀ Chọn Vòng';
+        document.getElementById('back-btn').innerText = parentMode ? '◀ Bảng Cho Bố' : '◀ Trang chủ';
     }
 
     function openVocab() {
@@ -684,15 +685,35 @@
     let startTime = 0, currentTopicKey = '';
     let examCorrectCount = 0;
 
-    // SỬA: ĐIỀU HƯỚNG PHÂN CẤP CHUẨN KHI BẤM NÚT QUAY LẠI
+    // SỬA: ĐIỀU HƯỚNG PHÂN CẤP CHUẨN KHI BẤM NÚT QUAY LẠI CẢ KHI TỪ CỬA HÀNG VỀ
     function showMenu() {
         stopTimer();
+
+        // 0. Khi từ Cửa hàng quay về
+        if (document.getElementById('store-screen').style.display === 'block') {
+            document.getElementById('store-screen').style.display = 'none';
+            if (previousScreenBeforeStore && document.getElementById(previousScreenBeforeStore)) {
+                document.getElementById(previousScreenBeforeStore).style.display = 'block';
+                if (previousScreenBeforeStore === 'quiz-screen') {
+                    document.getElementById('back-btn').innerText = '◀ Chọn chủ đề';
+                } else if (previousScreenBeforeStore === 'topic-select-screen') {
+                    document.getElementById('back-btn').innerText = parentMode ? '◀ Bảng Cho Bố' : '◀ Trang chủ';
+                } else {
+                    document.getElementById('back-btn').style.display = (previousScreenBeforeStore === 'menu-screen') ? 'none' : 'block';
+                }
+            } else {
+                document.getElementById('menu-screen').style.display = 'block';
+                document.getElementById('back-btn').style.display = 'none';
+            }
+            previousScreenBeforeStore = '';
+            return;
+        }
 
         // 1. Khi đang trong Quiz/Bài thi -> Bấm quay lại sẽ về Màn hình chọn chủ đề
         if (document.getElementById('quiz-screen').style.display === 'block') {
             document.getElementById('quiz-screen').style.display = 'none';
             document.getElementById('topic-select-screen').style.display = 'block';
-            document.getElementById('back-btn').innerText = parentMode ? '◀ Bảng Cho Bố' : '◀ Chọn Vòng';
+            document.getElementById('back-btn').innerText = parentMode ? '◀ Bảng Cho Bố' : '◀ Trang chủ';
             return;
         }
 
@@ -735,15 +756,30 @@
         document.getElementById('back-btn').innerText = '◀ Trang chủ';
     }
 
+    // SỬA HÀM OPENSTORE ẨN SẠCH CÁC MÀN HÌNH KHÁC VÀ LƯU VỊ TRÍ
     function openStore() {
         if (!currentStudentId) {
             alert("Vui lòng chọn hoặc tạo tài khoản cho bé trước khi vào cửa hàng!");
             return;
         }
+
+        // Ghi nhận lại màn hình hiện tại trước khi mở cửa hàng
+        if (document.getElementById('quiz-screen').style.display === 'block') previousScreenBeforeStore = 'quiz-screen';
+        else if (document.getElementById('topic-select-screen').style.display === 'block') previousScreenBeforeStore = 'topic-select-screen';
+        else if (document.getElementById('parent-screen').style.display === 'block') previousScreenBeforeStore = 'parent-screen';
+        else previousScreenBeforeStore = 'menu-screen';
+
+        // Ẩn tất cả các màn hình
         document.getElementById('menu-screen').style.display = 'none';
+        document.getElementById('quiz-screen').style.display = 'none';
+        document.getElementById('topic-select-screen').style.display = 'none';
+        document.getElementById('parent-screen').style.display = 'none';
+        document.getElementById('vocab-screen').style.display = 'none';
+
+        // Mở cửa hàng
         document.getElementById('store-screen').style.display = 'block';
         document.getElementById('back-btn').style.display = 'block';
-        document.getElementById('back-btn').innerText = '◀ Trang chủ';
+        document.getElementById('back-btn').innerText = (previousScreenBeforeStore === 'quiz-screen' || previousScreenBeforeStore === 'topic-select-screen') ? '◀ Quay lại' : '◀ Trang chủ';
 
         const grid = document.getElementById('store-items'); grid.innerHTML = '';
         if (!userStats.inventory) userStats.inventory = {};
