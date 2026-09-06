@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TIMO Math Grade 1 - Full Ultimate Features Fixed</title>
+    <title>TIMO Math Grade 1 - Fixed Text To Speech</title>
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
@@ -95,18 +95,15 @@
         .buy-btn { background: #ec4899; color: white; border: none; border-radius: 12px; padding: 8px 12px; font-weight: bold; cursor: pointer; width: 100%; }
         .buy-btn:disabled { background: #cbd5e1; cursor: not-allowed; }
 
-        /* Vocabulary Flashcard Grid */
         .vocab-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 15px; max-height: 420px; overflow-y: auto; }
         .vocab-card { background: #f5f3ff; border: 2px solid #a78bfa; border-radius: 16px; padding: 12px; text-align: center; }
         .vocab-en { font-size: 16px; font-weight: bold; color: #4c1d95; }
         .vocab-vi { font-size: 13px; color: #6d28d9; margin-top: 4px; }
 
-        /* Leaderboard Table */
         .leaderboard-table { width: 100%; border-collapse: collapse; margin-top: 12px; }
         .leaderboard-table th, .leaderboard-table td { padding: 10px; text-align: left; border-bottom: 1px solid #e2e8f0; font-size: 14px; }
         .leaderboard-table th { background: #eff6ff; color: #1e40af; font-weight: bold; }
 
-        /* Certificate Modal */
         .certificate-box { background: #fffbebf7; border: 8px double #f59e0b; border-radius: 20px; padding: 20px; text-align: center; position: relative; margin-top: 15px; }
         .certificate-title { font-size: 22px; font-weight: bold; color: #92400e; margin-bottom: 8px; }
         .certificate-name { font-size: 26px; font-weight: bold; color: #1d4ed8; text-decoration: underline; margin: 10px 0; }
@@ -187,7 +184,6 @@
             </div>
         </div>
 
-        <!-- BẰNG KHEN ẢO KHI HOÀN THÀNH -->
         <div id="certificate-container" style="display: none;">
             <div class="certificate-box">
                 <div class="certificate-title">🏆 BẰNG KHEN VINH DANH 🏆</div>
@@ -254,7 +250,6 @@
     <div id="parent-screen" style="display: none;">
         <h2 style="color: #1e3a8a; margin-top: 0; text-align: center;">🔒 BẢNG ĐIỀU KHIỂN CHO BỐ</h2>
 
-        <!-- KHỐI XEM THỬ 3 VÒNG (CHỈ HIỂN THỊ KHI VÀO TỪ MÀN HÌNH ĐĂNG NHẬP BÊN NGOÀI) -->
         <div id="parent-preview-rounds-box" style="display: none;">
             <p style="text-align: center; color: #475569; font-size: 14px; margin-top: -5px; font-weight: 600;">Xem thử đề thi mạn phép bỏ qua mọi điều kiện khóa Vòng:</p>
             <div class="rounds-container">
@@ -284,7 +279,6 @@
             </div>
         </div>
 
-        <!-- KHỐI BẢNG XẾP HẠNG GIA ĐÌNH -->
         <div style="background: #f8fafc; border: 2px solid #cbd5e1; border-radius: 16px; padding: 14px; margin-top: 15px;">
             <h3 style="color: #1e3a8a; margin-top: 0;">🏆 BẢNG XẾP HẠNG THI ĐỦA TRONG GIA ĐÌNH</h3>
             <table class="leaderboard-table">
@@ -301,7 +295,6 @@
             </table>
         </div>
 
-        <!-- KHỐI CÀI ĐẶT THỜI GIAN & TIÊU CHUẨN LÊN LỚP -->
         <div style="background: #fffbeef7; border: 2px solid #fde68a; border-radius: 16px; padding: 14px; margin-top: 15px;">
             <h3 style="color: #92400e; margin-top: 0;">⚙️ TÙY CHỈNH TIÊU CHUẨN LÊN LỚP</h3>
             <div class="setting-input-group">
@@ -319,7 +312,6 @@
             <button class="action-btn" style="padding: 10px; font-size: 14px; margin-top: 5px;" onclick="saveCustomSettings()">LƯU TÙY CHỈNH</button>
         </div>
 
-        <!-- KHỐI SAO LƯU & ĐỔI MẬT KHẨU PHỤ HUYNH -->
         <div style="background: #f1f5f9; border: 2px solid #cbd5e1; border-radius: 16px; padding: 14px; margin-top: 15px;">
             <h3 style="color: #334155; margin-top: 0;">🔒 BẢO MẬT & SAO LƯU DỮ LIỆU</h3>
             <button class="action-btn" style="padding: 10px; font-size: 14px; background: #475569;" onclick="changeParentPassword()">🔑 ĐỔI MẬT KHẨU PHỤ HUYNH</button>
@@ -330,7 +322,6 @@
             </div>
         </div>
 
-        <!-- KHỐI THỐNG KÊ TIẾN ĐỘ (CHỈ HIỂN THỊ KHI ĐÃ CHỌN BÉ) -->
         <div id="parent-student-stats-box" style="display: none; margin-top: 15px;">
             <h3 style="color: #1e3a8a; margin-top: 0;">📊 THỐNG KÊ TIẾN ĐỘ CỦA BÉ</h3>
             <p style="color: #64748b; font-size: 14px;">Số lần thi thử Vòng 1 đạt ≥ 95%: <b id="r1-pass-count" style="color:#1d4ed8;">0</b> / <span id="r1-req-display">20</span> lần</p>
@@ -364,11 +355,9 @@
     let parentMode = false;
     let isReviewWrongMode = false;
     
-    // Biến cho bộ đếm thời gian
     let timerInterval = null;
     let timeRemaining = 3600;
 
-    // Cài đặt tùy chỉnh của phụ huynh
     let parentPassword = localStorage.getItem('timo_parent_pass') || '1234';
     let appSettings = JSON.parse(localStorage.getItem('timo_app_settings') || '{"timerMin": 60, "v1Req": 20, "v2Req": 20}');
 
@@ -1033,13 +1022,22 @@
         if (el) speakText(el.innerText);
     }
 
+    // SỬA: LỌC BỎ TOÀN BỘ KÝ TỰ EMOJI KHI ĐỌC PHÁT ÂM TIẾNG ANH
     function speakText(text) {
         if ('speechSynthesis' in window) {
             window.speechSynthesis.cancel();
-            const cleanText = text.replace(/\(.*\)/g, '').trim();
+            
+            // 1. Loại bỏ phần dịch Tiếng Việt trong ngoặc đơn (...)
+            let cleanText = text.replace(/\(.*\)/g, '');
+            
+            // 2. Lọc bỏ toàn bộ các ký tự Emoji Unicode để không đọc thành "Brain", "Light bulb"...
+            cleanText = cleanText.replace(/[\u{1F300}-\u{1F6FF}\u{1F900}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu, '');
+            
+            cleanText = cleanText.trim();
+
             const utterance = new SpeechSynthesisUtterance(cleanText);
             utterance.lang = 'en-US';
-            utterance.rate = 0.9;
+            utterance.rate = 0.85; // Đọc với tốc độ vừa phải cho bé nghe
             window.speechSynthesis.speak(utterance);
         }
     }
